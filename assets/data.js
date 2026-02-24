@@ -638,6 +638,70 @@ const organizaciones = [
         logo: "assets/logos_orgs/logo_pacifica_cultural.png",
         lat: 3.4052,
         lng: -76.5225
+    },
+    {
+        id: 30,
+        nombre: "Medance MD",
+        nombreCompleto: "MEDANCE MD",
+        municipio: "Medellín / Envigado",
+        departamento: "Antioquia",
+        barrio: "La Floresta / Barrio Mesa",
+        representante: "Mateo García Atehortua",
+        telefono: "3195951985",
+        email: "medancemd@gmail.com",
+        quehacer: "Medance promueve el amor por la danza folclórica colombiana en las nuevas generaciones, por medio de cuatro líneas de trabajo: Inclusión, Investigación, Innovación e Inspiración. Desarrolla procesos formativos, de proyección y de gestión en territorios, llevando lo mejor de la cultura colombiana a escenarios locales, nacionales e internacionales.",
+        lema: "Cada paso una oportunidad, cada danza un acto de paz: cuando el cuerpo habla, la violencia calla.",
+        beneficiarios: 1200,
+        sectores: ["Danza"],
+        poblacion: ["Afro", "Mestizos"],
+        instagram: "https://www.instagram.com/medance_md/",
+        facebook: "https://www.facebook.com/MedanceMedellin/",
+        youtube: "https://www.youtube.com/@medancemd325",
+        logo: "",
+        lat: 6.2267,
+        lng: -75.5935
+    },
+    {
+        id: 31,
+        nombre: "Jenayeng Vida Ora",
+        nombreCompleto: "JENAYENG VIDA ORA",
+        municipio: "Sibundoy",
+        departamento: "Putumayo",
+        barrio: "Barrio Comercial",
+        representante: "Erika Mavisoy",
+        telefono: "3134989159",
+        email: "jenayengvidaor@gmail.com",
+        quehacer: "Asociación sin ánimo de lucro que nace del compromiso con el territorio y los procesos colectivos de los pueblos étnicos y campesinos del Putumayo. Fortalece el tejido organizativo y asociativo como base para la autonomía, la permanencia cultural y la defensa de la vida. Impulsa iniciativas artísticas, culturales y formativas desde los saberes ancestrales, las memorias comunitarias y las expresiones propias de cada pueblo.",
+        lema: "Tejemos comunidad desde la sensibilidad. Escuchamos para comprender, reconocemos para dignificar y dialogamos para transformar los conflictos sin violencia.",
+        beneficiarios: 250,
+        sectores: ["Sonoro", "Letras", "Multidisciplinar"],
+        poblacion: ["Indígenas", "Mestizos", "Campesino"],
+        instagram: "https://www.instagram.com/jenayeng_vidaor/",
+        logo: "",
+        lat: 1.2019,
+        lng: -76.9196
+    },
+    {
+        id: 32,
+        nombre: "La Bellecera",
+        nombreCompleto: "Biblioteca Comunitaria La Bellecera",
+        municipio: "Piedecuesta",
+        departamento: "Santander",
+        barrio: "Cabecera del Llano",
+        representante: "Edson A. Velandia Corredor",
+        telefono: "3167322058",
+        email: "labellecerapiedecuesta@gmail.com",
+        quehacer: "Nos organizamos para convocar a la comunidad a través de las expresiones artísticas y el deporte, con el fin de generar espacios de aprendizaje y encuentro comunitario.",
+        lema: "La mejor biblioteca de la galaxia 🌌",
+        beneficiarios: 200,
+        sectores: ["Audiovisual", "Sonoro", "Letras", "Plástica", "Multidisciplinar"],
+        poblacion: ["Mestizos"],
+        web: "https://labellecera.com",
+        instagram: "https://www.instagram.com/labellecera",
+        facebook: "https://www.facebook.com/labellecera",
+        logo: "",
+        lat: 6.9879,
+        lng: -73.0537
     }
 ];
 
@@ -668,7 +732,10 @@ const aforismos = [
     { frase: "Soy joven, soy paz, yo puedo ser capaz", org: "Kombilesa Mí" },
     { frase: "La común-unidad como la cohesión de propuestas individuales con un fin colectivo", org: "Alternativo" },
     { frase: "El espacio público se transforma cuando la comunidad crea", org: "Guaque" },
-    { frase: "Arte que dignifica, cultura que transforma y educación que inspira", org: "Pacífica Cultural" }
+    { frase: "Arte que dignifica, cultura que transforma y educación que inspira", org: "Pacífica Cultural" },
+    { frase: "Cada paso una oportunidad, cada danza un acto de paz: cuando el cuerpo habla, la violencia calla.", org: "Medance MD" },
+    { frase: "Tejemos comunidad desde la sensibilidad. Nuestra fuerza es la escucha permanente y el cuidado colectivo de la vida.", org: "Jenayeng Vida Ora" },
+    { frase: "La mejor biblioteca de la galaxia 🌌", org: "La Bellecera" }
 ];
 
 // Exportar datos
