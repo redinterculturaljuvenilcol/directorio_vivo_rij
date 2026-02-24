@@ -1107,6 +1107,79 @@
         .marquee-track img:hover {
             filter: grayscale(0) brightness(1.2);
         }
+        /* Galería - títulos verticales */
+        .galeria-vertical-wrap {
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+            min-height: 100%;
+        }
+        .galeria-titulos {
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+            flex-shrink: 0;
+            padding: 2rem 0 2rem 1.5rem;
+            gap: 0.5rem;
+        }
+        .galeria-titulo-v {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            font-family: 'Work Sans', sans-serif;
+            font-weight: 900;
+            text-transform: uppercase;
+            color: #1a1a1a;
+            line-height: 0.9;
+            letter-spacing: -0.02em;
+            white-space: nowrap;
+            font-size: clamp(3rem, 8vw, 9rem);
+            flex-shrink: 0;
+        }
+        .galeria-subtitulo-v {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            font-family: 'Work Sans', sans-serif;
+            font-weight: 400;
+            font-style: italic;
+            color: #555;
+            line-height: 1;
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+            font-size: clamp(0.9rem, 1.8vw, 2rem);
+            flex-shrink: 0;
+            align-self: center;
+        }
+        .galeria-grid-wrap {
+            flex: 1;
+            min-width: 0;
+            padding: 2rem 1rem 2rem 0;
+        }
+        @media (max-width: 767px) {
+            .galeria-titulos {
+                flex-direction: column;
+                writing-mode: horizontal-tb;
+                padding: 1.5rem 1rem 0.5rem 1rem;
+            }
+            .galeria-titulo-v {
+                writing-mode: horizontal-tb;
+                transform: none;
+                font-size: clamp(2.5rem, 12vw, 4rem);
+            }
+            .galeria-subtitulo-v {
+                writing-mode: horizontal-tb;
+                transform: none;
+                font-size: 1rem;
+                align-self: auto;
+                margin-bottom: 0.5rem;
+            }
+            .galeria-vertical-wrap {
+                flex-direction: column;
+            }
+            .galeria-grid-wrap {
+                padding: 0 0.5rem 1.5rem;
+            }
+        }
+
         @keyframes marquee-scroll {
             from { transform: translateX(0); }
             to { transform: translateX(-50%); }
@@ -1189,12 +1262,16 @@
     </div>
 
     <!-- SECCIÓN 3: GALERÍA -->
-    <section id="galeria" class="py-16" style="background-color: #facc15;">
-        <div class="max-w-7xl mx-auto w-full">
-            <h2 class="text-4xl md:text-5xl font-bold text-center mb-4 text-gray-900">Galería</h2>
-            <p class="text-center text-gray-600 mb-10 text-lg italic">Memorias del jaguar en el territorio</p>
-            <div id="gallery-grid">
-                <!-- Los álbumes se cargarán dinámicamente aquí -->
+    <section id="galeria" class="overflow-hidden" style="background-color: #facc15;">
+        <div class="galeria-vertical-wrap max-w-screen-2xl mx-auto">
+            <!-- Títulos verticales -->
+            <div class="galeria-titulos">
+                <span class="galeria-titulo-v">Galería</span>
+                <span class="galeria-subtitulo-v">Memorias del jaguar en el territorio</span>
+            </div>
+            <!-- Grid de álbumes -->
+            <div class="galeria-grid-wrap">
+                <div id="gallery-grid"></div>
             </div>
         </div>
     </section>
