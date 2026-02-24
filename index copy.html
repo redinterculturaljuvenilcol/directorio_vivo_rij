@@ -62,15 +62,15 @@
         #preloader-video {
             position: relative;
             z-index: 2;
-            width: 240px;
-            height: 240px;
+            width: 180px;
+            height: 180px;
             object-fit: contain;
             filter: drop-shadow(0 0 30px rgba(0,0,0,0.7));
         }
         @media (min-width: 768px) {
             #preloader-video {
-                width: 340px;
-                height: 340px;
+                width: 260px;
+                height: 260px;
             }
         }
 
@@ -577,7 +577,7 @@
         .hex-row {
             display: flex;
             justify-content: center;
-            margin-top: -10px;
+            margin-top: -20px;
         }
         .hex-row:first-child {
             margin-top: 0;
@@ -586,7 +586,7 @@
         .hex-wrap {
             width: 178px;
             flex-shrink: 0;
-            margin: 0 16px;
+            margin: 0 8px;
         }
 
         @media (max-width: 767px) {
@@ -600,22 +600,22 @@
             .hex-row {
                 display: flex;
                 justify-content: center;
-                margin-top: -5px;
+                margin-top: -10px;
                 width: 100%;
-                gap: 12px;
+                gap: 3px;
             }
             .hex-row:first-child {
                 margin-top: 0;
             }
             .hex-wrap {
-                width: 30%;
+                width: 25%;
                 flex-shrink: 0;
             }
             .hex-row-offset {
                 transform: translateX(15%);
             }
             .album-card .album-info h3 {
-                font-size: 0.75rem;
+                font-size: 0.82rem;
             }
             .album-card .album-info p {
                 font-size: 0.62rem;
@@ -659,23 +659,20 @@
             text-align: center;
             z-index: 2;
             color: white;
-            width: 85%;
-            padding: 0 5px;
+            width: 75%;
         }
 
         .album-card .album-info h3 {
-            font-size: 0.95rem;
+            font-size: 1.05rem;
             font-weight: 800;
             margin-bottom: 0.3rem;
             text-shadow: 0 2px 6px rgba(0,0,0,0.9);
-            line-height: 1.1;
-            word-wrap: break-word;
-            hyphens: auto;
+            line-height: 1.2;
         }
 
         @media (min-width: 1024px) {
             .album-card .album-info h3 {
-                font-size: 1.2rem;
+                font-size: 1.4rem;
             }
             .album-card .album-info p {
                 font-size: 0.85rem;
@@ -1047,8 +1044,10 @@
                 <ul class="hidden md:flex space-x-5 text-xs font-medium text-white/85">
                     <li><a href="#inicio" class="hover:text-yellow-400">Inicio</a></li>
                     <li><a href="#galeria" class="hover:text-yellow-400">Galería</a></li>
+                    <li><a href="#manifiesto" class="hover:text-yellow-400">Manifiesto</a></li>
                     <li><a href="#mapa" class="hover:text-yellow-400">Mapa</a></li>
                     <li><a href="#directorio" class="hover:text-yellow-400">Directorio</a></li>
+                    <li><a href="#articulaciones" class="hover:text-yellow-400">Articulaciones</a></li>
                     <li><a href="#salvaguarda" class="hover:text-yellow-400">Salvaguarda</a></li>
                     <li><a href="#envolvente" class="hover:text-yellow-400">Envolvente</a></li>
                     <li><a href="#contacto" class="hover:text-yellow-400">Contacto</a></li>
@@ -1118,13 +1117,31 @@
         <div class="modal-info" id="modal-info"></div>
     </div>
 
-    <!-- Divider: Galería → Mapa -->
+    <!-- Divider: Galería → Manifiesto -->
     <div class="section-divider bottom">
         <svg viewBox="0 0 1200 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M0,0 L0,20 Q400,24 800,18 T1200,22 L1200,0 Z" fill="#facc15"/>
             <path d="M0,20 Q400,24 800,18 T1200,22 L1200,40 L0,40 Z" fill="#2e1065"/>
         </svg>
     </div>
+
+    <!-- SECCIÓN 4: MANIFIESTO - WORD BY WORD SCROLL -->
+    <section id="manifiesto" class="relative text-white" style="background-color: #2e1065;">
+        <div class="manifiesto-sticky" id="manifiesto-sticky">
+            <div class="absolute inset-0 opacity-20" style="background-image: url('https://www.transparenttextures.com/patterns/asphalt-dark.png');"></div>
+            <div class="absolute top-0 right-0 w-96 h-96 bg-pink-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
+            <div class="absolute bottom-0 left-0 w-96 h-96 bg-cyan-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" style="animation-delay: 1s;"></div>
+
+            <div class="manifiesto-content">
+                <div class="max-w-5xl mx-auto px-6 relative z-10">
+                    <div class="manifiesto-titulo" id="manifiesto-titulo"></div>
+                    <div class="manifiesto-cuerpo" id="manifiesto-cuerpo"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Transición limpia: Manifiesto → Mapa (sin divider, mismo tono oscuro) -->
 
     <!-- SECCIÓN 5: MAPA DE TERRITORIALIZACIÓN -->
     <section id="mapa" style="background-color: #2e1065;">
@@ -1179,10 +1196,43 @@
         </div>
     </section>
 
-    <!-- Divider: Directorio → Salvaguarda -->
+    <!-- Divider: Directorio → Articulaciones -->
     <div class="section-divider bottom">
         <svg viewBox="0 0 1200 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0,0 L0,19 Q350,24 700,18 T1200,21 L1200,0 Z" fill="#2e1065"/>
+            <path d="M0,0 L0,21 Q250,17 500,23 T1000,19 T1200,22 L1200,0 Z" fill="#2e1065"/>
+            <path d="M0,21 Q250,17 500,23 T1000,19 T1200,22 L1200,40 L0,40 Z" fill="#f59e0b"/>
+        </svg>
+    </div>
+
+    <!-- SECCIÓN 7: ARTICULACIONES -->
+    <section id="articulaciones" class="bg-gradient-to-r from-amber-400 to-orange-500 text-white">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-12">EL ENREDO</h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white/10 backdrop-blur rounded-xl p-6">
+                    <h3 class="text-2xl font-bold mb-4">Redam × Yucuta</h3>
+                    <p>Colaboración en proyectos de preservación cultural amazónica</p>
+                </div>
+                <div class="bg-white/10 backdrop-blur rounded-xl p-6">
+                    <h3 class="text-2xl font-bold mb-4">Kombilesa Mi × ODEC</h3>
+                    <p>Alianza para el fortalecimiento de identidades juveniles</p>
+                </div>
+                <div class="bg-white/10 backdrop-blur rounded-xl p-6">
+                    <h3 class="text-2xl font-bold mb-4">Bari Rock × La Tigra</h3>
+                    <p>Fusión musical y cultural en territorios de frontera</p>
+                </div>
+                <div class="bg-white/10 backdrop-blur rounded-xl p-6">
+                    <h3 class="text-2xl font-bold mb-4">Biohoty × Enraizarte</h3>
+                    <p>Intercambio de saberes ambientales y artísticos</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Divider: Articulaciones → Salvaguarda -->
+    <div class="section-divider bottom">
+        <svg viewBox="0 0 1200 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,0 L0,19 Q350,24 700,18 T1200,21 L1200,0 Z" fill="#f59e0b"/>
             <path d="M0,19 Q350,24 700,18 T1200,21 L1200,40 L0,40 Z" fill="#15803d"/>
         </svg>
     </div>
@@ -2276,7 +2326,127 @@
         }
 
         // ========== MANIFIESTO AUTO-REVEAL ==========
-        // (Manifiesto section removed)
+        function initManifiestoTypewriter() {
+            const section = document.getElementById('manifiesto');
+            const stickyEl = document.getElementById('manifiesto-sticky');
+            const tituloEl = document.getElementById('manifiesto-titulo');
+            const cuerpoEl = document.getElementById('manifiesto-cuerpo');
+
+            const tituloText = 'EL RUGIDO';
+            const cuerpoText = 'Somos la cosecha del asfalto caliente, la generación que aprendió a florecer justo donde nos dijeron que no crecería nada. Nacimos del estallido, no para quedarnos en el grito, sino para organizar la esperanza y convertir la indignación en estructuras vivas. Desde la profundidad de la selva hasta la esquina del barrio, tejemos una red anfibia que conecta el remedio ancestral con el código urbano, entendiendo que la cultura no es un adorno, sino nuestra herramienta más afilada de defensa personal y colectiva. Aquí declaramos obsoleta la competencia: nuestra única política es la juntanza y nuestra venganza es la vida digna. No pedimos permiso para transformar el territorio; ya lo estamos haciendo, con la certeza de que nuestra rebeldía no es amarga, sino creadora, ruidosa y radicalmente alegre.';
+
+            function wordsToSpans(text) {
+                return text.split(/\s+/).map(w => '<span class="mw">' + w + '</span>').join(' ');
+            }
+
+            tituloEl.innerHTML = wordsToSpans(tituloText);
+            cuerpoEl.innerHTML = wordsToSpans(cuerpoText);
+
+            const allWords = section.querySelectorAll('.mw');
+            const totalWords = allWords.length;
+
+            // Posicionar sticky debajo del nav+banner
+            function setStickyPosition() {
+                const nav = document.getElementById('main-nav');
+                const banner = document.getElementById('aforismos-banner');
+                const topOffset = (nav ? nav.offsetHeight : 0) + (banner ? banner.offsetHeight : 0);
+                stickyEl.style.top = topOffset + 'px';
+                stickyEl.style.height = 'calc(100vh - ' + topOffset + 'px)';
+            }
+            setStickyPosition();
+
+            // Sección solo necesita ~2 viewport heights
+            section.style.minHeight = (window.innerHeight * 2.5) + 'px';
+
+            let wordsRevealed = 0;
+            let autoRevealInterval = null;
+            let autoRevealStarted = false;
+            let completed = false;
+            const revealSpeed = 80; // ms por palabra
+
+            function revealWord() {
+                if (wordsRevealed >= totalWords) {
+                    if (autoRevealInterval) {
+                        clearInterval(autoRevealInterval);
+                        autoRevealInterval = null;
+                    }
+                    completed = true;
+                    return;
+                }
+                allWords[wordsRevealed].classList.add('vis');
+                wordsRevealed++;
+
+                // Auto-scroll del contenedor sticky
+                if (stickyEl.scrollHeight > stickyEl.clientHeight) {
+                    const lastWord = allWords[wordsRevealed - 1];
+                    if (lastWord) {
+                        const wordRect = lastWord.getBoundingClientRect();
+                        const stickyRect = stickyEl.getBoundingClientRect();
+                        const wordRelativeTop = wordRect.top - stickyRect.top + stickyEl.scrollTop;
+                        const targetScroll = wordRelativeTop - stickyEl.clientHeight * 0.6;
+                        if (targetScroll > 0) {
+                            stickyEl.scrollTo({ top: targetScroll, behavior: 'smooth' });
+                        }
+                    }
+                }
+            }
+
+            function startAutoReveal() {
+                if (autoRevealStarted) return;
+                autoRevealStarted = true;
+                autoRevealInterval = setInterval(revealWord, revealSpeed);
+            }
+
+            function stopAutoReveal() {
+                if (autoRevealInterval) {
+                    clearInterval(autoRevealInterval);
+                    autoRevealInterval = null;
+                }
+                autoRevealStarted = false;
+            }
+
+            function resetAll() {
+                stopAutoReveal();
+                wordsRevealed = 0;
+                completed = false;
+                allWords.forEach(w => w.classList.remove('vis'));
+                stickyEl.scrollTop = 0;
+            }
+
+            function checkVisibility() {
+                const rect = section.getBoundingClientRect();
+                const vh = window.innerHeight;
+
+                // Si la sección salió completamente del viewport -> resetear
+                if (rect.bottom < 0 || rect.top > vh) {
+                    if (wordsRevealed > 0) resetAll();
+                    return;
+                }
+
+                // Trigger: la sección entra en pantalla (top < 2/3 vh)
+                if (rect.top < vh * 0.66 && !completed) {
+                    startAutoReveal();
+                }
+            }
+
+            let ticking = false;
+            window.addEventListener('scroll', function() {
+                if (!ticking) {
+                    requestAnimationFrame(function() {
+                        checkVisibility();
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            }, { passive: true });
+
+            window.addEventListener('resize', function() {
+                setStickyPosition();
+                section.style.minHeight = (window.innerHeight * 2.5) + 'px';
+            });
+
+            checkVisibility();
+        }
 
         // Cargar directorio
         let currentDirFilter = 'all';
@@ -2532,8 +2702,10 @@
                 <ul class="flex flex-col space-y-2 px-4">
                     <li><a href="#inicio" class="block py-2 text-white/85 hover:text-yellow-400">Inicio</a></li>
                     <li><a href="#galeria" class="block py-2 text-white/85 hover:text-yellow-400">Galería</a></li>
+                    <li><a href="#manifiesto" class="block py-2 text-white/85 hover:text-yellow-400">Manifiesto</a></li>
                     <li><a href="#mapa" class="block py-2 text-white/85 hover:text-yellow-400">Mapa</a></li>
                     <li><a href="#directorio" class="block py-2 text-white/85 hover:text-yellow-400">Directorio</a></li>
+                    <li><a href="#articulaciones" class="block py-2 text-white/85 hover:text-yellow-400">Articulaciones</a></li>
                     <li><a href="#salvaguarda" class="block py-2 text-white/85 hover:text-yellow-400">Salvaguarda</a></li>
                     <li><a href="#envolvente" class="block py-2 text-white/85 hover:text-yellow-400">Envolvente</a></li>
                     <li><a href="#contacto" class="block py-2 text-white/85 hover:text-yellow-400">Contacto</a></li>
@@ -2570,6 +2742,7 @@
             loadDirectorio();
             initDirSearchAndFilters();
             initMap();
+            initManifiestoTypewriter();
             initLogosMarquee();
 
             // Reajustar posiciones en resize
