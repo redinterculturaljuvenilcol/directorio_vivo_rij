@@ -164,6 +164,83 @@
             }
         }
 
+        /* Layout sidebar mapa y directorio — solo pantalla horizontal/desktop */
+        .map-layout, .dir-layout {
+            display: block;
+        }
+        .map-sidebar, .dir-sidebar {
+            display: none;
+        }
+        .map-filters-mobile, .dir-filters-mobile {
+            display: flex;
+        }
+
+        @media (min-width: 900px) {
+            .map-layout {
+                display: flex;
+                align-items: flex-start;
+            }
+            .map-sidebar {
+                display: flex;
+                flex-direction: column;
+                width: 170px;
+                flex-shrink: 0;
+                padding: 1rem 1rem 1rem 1.5rem;
+                position: sticky;
+                top: 80px;
+                gap: 0.5rem;
+            }
+            .map-sidebar .filter-btn {
+                width: 100%;
+                text-align: left;
+                padding: 0.65rem 1.1rem;
+                font-size: 0.9rem;
+                border-radius: 0.6rem;
+                display: block;
+            }
+            .map-filters-mobile {
+                display: none;
+            }
+            .map-main {
+                flex: 1;
+                min-width: 0;
+            }
+            #map {
+                height: 600px;
+            }
+
+            .dir-layout {
+                display: flex;
+                align-items: flex-start;
+                gap: 0;
+            }
+            .dir-sidebar {
+                display: flex;
+                flex-direction: column;
+                width: 170px;
+                flex-shrink: 0;
+                padding: 0.5rem 1rem 1rem 1.5rem;
+                position: sticky;
+                top: 80px;
+                gap: 0.5rem;
+            }
+            .dir-sidebar .filter-btn-dir {
+                width: 100%;
+                text-align: left;
+                padding: 0.65rem 1.1rem;
+                font-size: 0.9rem;
+                border-radius: 0.6rem;
+                display: block;
+            }
+            .dir-filters-mobile {
+                display: none;
+            }
+            .dir-main {
+                flex: 1;
+                min-width: 0;
+            }
+        }
+
         /* Card de organización en mapa */
         .org-popup {
             min-width: 200px;
@@ -1131,14 +1208,14 @@
     <!-- SECCIÓN 5: MAPA DE TERRITORIALIZACIÓN -->
     <section id="mapa" style="background-color: #2e1065;">
         <div class="w-full">
-            <div class="max-w-7xl mx-auto px-4 mb-4">
-                <!-- Buscador del mapa -->
-                <div class="relative max-w-xl mx-auto mb-4">
+            <!-- Buscador (siempre arriba) -->
+            <div class="max-w-7xl mx-auto px-4 pt-6 pb-2">
+                <div class="relative max-w-xl mx-auto">
                     <input type="text" id="map-search" placeholder="Buscar organización..." class="w-full px-5 py-3 rounded-full bg-white/10 text-white border border-white/20 focus:border-orange-400 focus:outline-none placeholder-white/50 text-sm backdrop-blur" autocomplete="off">
                     <div id="map-search-results" class="absolute z-50 left-0 right-0 mt-1 bg-violet-950 rounded-xl shadow-2xl border border-white/15 hidden max-h-60 overflow-y-auto"></div>
                 </div>
-                <!-- Filtros por sector -->
-                <div class="flex flex-wrap justify-center gap-2 mb-4" id="map-filters">
+                <!-- Filtros móvil/portrait (se ocultan en desktop) -->
+                <div class="map-filters-mobile flex flex-wrap justify-center gap-2 mt-4 mb-2" id="map-filters">
                     <button class="filter-btn" data-sector="Audiovisual">Audiovisual</button>
                     <button class="filter-btn" data-sector="Sonoro">Sonoro</button>
                     <button class="filter-btn" data-sector="Letras">Letras</button>
@@ -1149,7 +1226,25 @@
                     <button class="filter-btn" data-sector="Circo social">Circo</button>
                 </div>
             </div>
-            <div id="map"></div>
+            <!-- Layout con sidebar en desktop -->
+            <div class="map-layout">
+                <!-- Sidebar izquierda (filtros verticales, solo desktop) -->
+                <div class="map-sidebar">
+                    <p class="text-white/40 text-xs uppercase tracking-widest mb-2">Filtrar</p>
+                    <button class="filter-btn" data-sector="Audiovisual">Audiovisual</button>
+                    <button class="filter-btn" data-sector="Sonoro">Sonoro</button>
+                    <button class="filter-btn" data-sector="Letras">Letras</button>
+                    <button class="filter-btn" data-sector="Danza">Danza</button>
+                    <button class="filter-btn" data-sector="Plástica">Plástica</button>
+                    <button class="filter-btn" data-sector="Teatro">Teatro</button>
+                    <button class="filter-btn" data-sector="Multidisciplinar">Multidisciplinar</button>
+                    <button class="filter-btn" data-sector="Circo social">Circo</button>
+                </div>
+                <!-- Mapa -->
+                <div class="map-main">
+                    <div id="map"></div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -1164,8 +1259,8 @@
                 <input type="text" id="dir-search" placeholder="Buscar organización..." class="w-full px-5 py-3 rounded-full bg-white/10 text-white border border-white/20 focus:border-orange-400 focus:outline-none placeholder-white/50 text-sm backdrop-blur" autocomplete="off">
                 <div id="dir-search-results" class="absolute z-50 left-0 right-0 mt-1 bg-zinc-800 rounded-xl shadow-2xl border border-zinc-600 hidden max-h-60 overflow-y-auto"></div>
             </div>
-            <!-- Filtros por sector -->
-            <div class="flex flex-wrap justify-center gap-2 mb-8" id="dir-filters">
+            <!-- Filtros móvil/portrait -->
+            <div class="dir-filters-mobile flex flex-wrap justify-center gap-2 mb-6" id="dir-filters">
                 <button class="filter-btn-dir" data-sector="Audiovisual">Audiovisual</button>
                 <button class="filter-btn-dir" data-sector="Sonoro">Sonoro</button>
                 <button class="filter-btn-dir" data-sector="Letras">Letras</button>
@@ -1175,8 +1270,26 @@
                 <button class="filter-btn-dir" data-sector="Multidisciplinar">Multidisciplinar</button>
                 <button class="filter-btn-dir" data-sector="Circo social">Circo</button>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" id="directorio-grid">
-                <!-- Las fichas se cargarán dinámicamente aquí -->
+            <!-- Layout con sidebar en desktop -->
+            <div class="dir-layout">
+                <!-- Sidebar izquierda (filtros verticales, solo desktop) -->
+                <div class="dir-sidebar">
+                    <p class="text-white/40 text-xs uppercase tracking-widest mb-2">Filtrar</p>
+                    <button class="filter-btn-dir" data-sector="Audiovisual">Audiovisual</button>
+                    <button class="filter-btn-dir" data-sector="Sonoro">Sonoro</button>
+                    <button class="filter-btn-dir" data-sector="Letras">Letras</button>
+                    <button class="filter-btn-dir" data-sector="Danza">Danza</button>
+                    <button class="filter-btn-dir" data-sector="Plástica">Plástica</button>
+                    <button class="filter-btn-dir" data-sector="Teatro">Teatro</button>
+                    <button class="filter-btn-dir" data-sector="Multidisciplinar">Multidisciplinar</button>
+                    <button class="filter-btn-dir" data-sector="Circo social">Circo</button>
+                </div>
+                <!-- Grid de organizaciones -->
+                <div class="dir-main">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" id="directorio-grid">
+                        <!-- Las fichas se cargarán dinámicamente aquí -->
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -1804,17 +1917,19 @@
                 }
             });
 
-            // Filters - toggle behavior
-            document.querySelectorAll('#map-filters .filter-btn').forEach(btn => {
+            // Filters - toggle behavior (sincroniza sidebar desktop + mobile)
+            const allMapFilterBtns = () => document.querySelectorAll('#map-filters .filter-btn, .map-sidebar .filter-btn');
+            allMapFilterBtns().forEach(btn => {
                 btn.addEventListener('click', function() {
+                    const sector = this.dataset.sector;
                     if (this.classList.contains('active')) {
                         // Deselect - show all
-                        this.classList.remove('active');
+                        allMapFilterBtns().forEach(b => b.classList.remove('active'));
                         currentMapFilter = 'all';
                     } else {
-                        document.querySelectorAll('#map-filters .filter-btn').forEach(b => b.classList.remove('active'));
-                        this.classList.add('active');
-                        currentMapFilter = this.dataset.sector;
+                        allMapFilterBtns().forEach(b => b.classList.remove('active'));
+                        allMapFilterBtns().forEach(b => { if (b.dataset.sector === sector) b.classList.add('active'); });
+                        currentMapFilter = sector;
                     }
                     updateMapMarkers();
                     // Zoom a los marcadores filtrados o volver a vista por defecto
@@ -2375,17 +2490,19 @@
                 }
             });
 
-            // Filters - toggle behavior
-            document.querySelectorAll('#dir-filters .filter-btn-dir').forEach(btn => {
+            // Filters - toggle behavior (sincroniza sidebar desktop + mobile)
+            const allDirFilterBtns = () => document.querySelectorAll('#dir-filters .filter-btn-dir, .dir-sidebar .filter-btn-dir');
+            allDirFilterBtns().forEach(btn => {
                 btn.addEventListener('click', function() {
+                    const sector = this.dataset.sector;
                     if (this.classList.contains('active')) {
                         // Deselect - show all
-                        this.classList.remove('active');
+                        allDirFilterBtns().forEach(b => b.classList.remove('active'));
                         currentDirFilter = 'all';
                     } else {
-                        document.querySelectorAll('#dir-filters .filter-btn-dir').forEach(b => b.classList.remove('active'));
-                        this.classList.add('active');
-                        currentDirFilter = this.dataset.sector;
+                        allDirFilterBtns().forEach(b => b.classList.remove('active'));
+                        allDirFilterBtns().forEach(b => { if (b.dataset.sector === sector) b.classList.add('active'); });
+                        currentDirFilter = sector;
                     }
                     updateDirectorio();
                 });
