@@ -973,7 +973,9 @@
             overflow: hidden;
             position: relative;
             width: 100%;
-            padding: 1.5rem 0;
+            padding: 1.2rem 0;
+            background-color: #facc15;
+            border-radius: 0.5rem;
         }
         .logos-marquee::before, .logos-marquee::after {
             content: '';
@@ -985,11 +987,11 @@
         }
         .logos-marquee::before {
             left: 0;
-            background: linear-gradient(to right, #111827, transparent);
+            background: linear-gradient(to right, #facc15, transparent);
         }
         .logos-marquee::after {
             right: 0;
-            background: linear-gradient(to left, #111827, transparent);
+            background: linear-gradient(to left, #facc15, transparent);
         }
         .marquee-track {
             display: flex;
@@ -2394,9 +2396,11 @@
             const track = document.getElementById('marquee-track');
             if (!track) return;
             // Recoger logos de organizaciones que tengan logo
-            const logos = organizaciones.filter(o => o.logo && o.logo.length > 0).map(o => 
-                '<img src="' + o.logo + '" alt="' + o.nombre + '" title="' + o.nombre + '" loading="lazy">'
-            );
+            const logos = organizaciones.filter(o => o.logo && o.logo.length > 0).map(o => {
+                const isAlternativo = o.nombre === 'Alternativo';
+                const extraStyle = isAlternativo ? ' style="height:90px;max-width:200px;"' : '';
+                return '<img src="' + o.logo + '" alt="' + o.nombre + '" title="' + o.nombre + '" loading="lazy"' + extraStyle + '>';
+            });
             // Duplicar para loop continuo
             const allLogos = logos.join('') + logos.join('');
             track.innerHTML = allLogos;
