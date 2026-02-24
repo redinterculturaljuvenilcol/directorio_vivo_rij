@@ -972,26 +972,27 @@
         .logos-marquee {
             overflow: hidden;
             position: relative;
-            width: 100%;
-            padding: 1.2rem 0;
-            background-color: #facc15;
-            border-radius: 0.5rem;
+            width: 100vw;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 1.4rem 0;
+            background-color: #6b7280;
         }
         .logos-marquee::before, .logos-marquee::after {
             content: '';
             position: absolute;
             top: 0;
-            width: 60px;
+            width: 80px;
             height: 100%;
             z-index: 2;
         }
         .logos-marquee::before {
             left: 0;
-            background: linear-gradient(to right, #facc15, transparent);
+            background: linear-gradient(to right, #6b7280, transparent);
         }
         .logos-marquee::after {
             right: 0;
-            background: linear-gradient(to left, #facc15, transparent);
+            background: linear-gradient(to left, #6b7280, transparent);
         }
         .marquee-track {
             display: flex;
@@ -1254,7 +1255,7 @@
         <div class="max-w-7xl mx-auto px-4">
             <!-- Marquesina de logos de organizaciones -->
             <p class="text-center text-white/40 text-xs uppercase tracking-widest mb-4">Organizaciones participantes</p>
-            <div class="logos-marquee mb-10" id="logos-marquee">
+            <div class="logos-marquee mb-10 overflow-hidden" id="logos-marquee">
                 <div class="marquee-track" id="marquee-track">
                     <!-- Se llena dinámicamente con JS -->
                 </div>
