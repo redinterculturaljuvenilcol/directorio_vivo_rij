@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Red Intercultural Juvenil - RIJ</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    
+    <!-- Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+    
+    <!-- Data -->
+    <script src="assets/data.js?v=20260218b"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#ff6b35",
+                        "primary-hover": "#e05e1f",
+                        secondary: "#facc15",
+                        accent: "#22c55e",
+                        "background-light": "#fdfbf7",
+                        "background-dark": "#1a0f0a",
+                        "surface-dark": "#2d1b14",
+                        "deep-purple": "#2e1065",
+                        "paper-texture": "#f5f0eb",
+                    },
+                    fontFamily: {
+                        display: ["Work Sans", "sans-serif"],
+                        body: ["Work Sans", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.5rem",
+                        lg: "1rem",
+                        xl: "1.5rem",
+                        "2xl": "2rem",
+                        "3xl": "3rem",
+                        full: "9999px"
+                    },
+                    backgroundImage: {
+                        'paper-pattern': "url('https://www.transparenttextures.com/patterns/cream-paper.png')",
+                        'stone-pattern': "url('https://www.transparenttextures.com/patterns/asfalt-dark.png')",
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a0f0a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #5c3a2e;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff6b35;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Preloader */
+        #preloader {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+            transition: opacity 0.6s ease;
+        }
+        #preloader.hide {
+            opacity: 0;
+            pointer-events: none;
+        }
+        #preloader-bg {
+            position: absolute;
+            inset: 0;
+            background-color: #000;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        #preloader-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+        }
+        #preloader-video {
+            position: relative;
+            z-index: 2;
+            width: 180px;
+            height: 180px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 30px rgba(0,0,0,0.7));
+        }
+        @media (min-width: 768px) {
+            #preloader-video {
+                width: 260px;
+                height: 260px;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 1s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Aforismos Banner */
+        .aforismos-banner {
+            background-color: #facc15;
+            position: fixed;
+            left: 0;
+            width: 100%;
+            z-index: 40;
+            text-align: right;
+            padding: 0.6rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-end;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+        .aforismo-flash {
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+            text-align: right;
+        }
+        .aforismo-flash.visible {
+            opacity: 1;
+        }
+        .aforismo-frase {
+            font-weight: 900;
+            font-size: 1.2rem;
+            color: #1a1a1a;
+            line-height: 1.2;
+            text-transform: uppercase;
+        }
+        .aforismo-org {
+            font-weight: 500;
+            font-size: 0.75rem;
+            color: #555;
+            margin-top: 0.15rem;
+        }
+        .aforismo-org::before { content: '— '; }
+        @media (min-width: 768px) {
+            .aforismo-frase { font-size: 1.6rem; }
+            .aforismo-org { font-size: 0.85rem; }
+        }
+
+        /* Jaguar Masks */
+        .jaguar-rosette-mask {
+            mask-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M45.7,-76.3C58.9,-69.3,69.1,-58.3,76.6,-46.1C84.1,-33.9,88.9,-20.5,88.3,-7.4C87.7,5.7,81.7,18.5,73.6,30.3C65.5,42.1,55.3,52.9,43.6,61.5C31.9,70.1,18.7,76.5,4.8,78.2C-9.1,79.9,-23.7,76.9,-37.4,69.9C-51.1,62.9,-63.9,51.9,-72.6,38.6C-81.3,25.3,-85.9,9.7,-84.3,-5.1C-82.7,-19.9,-74.9,-33.9,-64.2,-44.7C-53.5,-55.5,-39.9,-63.1,-26.1,-69.6C-12.3,-76.1,1.7,-81.5,15.7,-82.9C29.7,-84.3,43.7,-81.7,45.7,-76.3Z" transform="translate(100 100)" /></svg>');
+            -webkit-mask-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M45.7,-76.3C58.9,-69.3,69.1,-58.3,76.6,-46.1C84.1,-33.9,88.9,-20.5,88.3,-7.4C87.7,5.7,81.7,18.5,73.6,30.3C65.5,42.1,55.3,52.9,43.6,61.5C31.9,70.1,18.7,76.5,4.8,78.2C-9.1,79.9,-23.7,76.9,-37.4,69.9C-51.1,62.9,-63.9,51.9,-72.6,38.6C-81.3,25.3,-85.9,9.7,-84.3,-5.1C-82.7,-19.9,-74.9,-33.9,-64.2,-44.7C-53.5,-55.5,-39.9,-63.1,-26.1,-69.6C-12.3,-76.1,1.7,-81.5,15.7,-82.9C29.7,-84.3,43.7,-81.7,45.7,-76.3Z" transform="translate(100 100)" /></svg>');
+            mask-size: contain;
+            -webkit-mask-size: contain;
+            mask-repeat: no-repeat;
+            -webkit-mask-repeat: no-repeat;
+            mask-position: center;
+            -webkit-mask-position: center;
+        }
+
+        /* Gallery Honeycomb */
+        .honeycomb {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .hex-row {
+            display: flex;
+            justify-content: center;
+            margin-top: -20px;
+        }
+        .hex-row:first-child { margin-top: 0; }
+        .hex-wrap {
+            width: 178px;
+            flex-shrink: 0;
+            margin: 0 8px;
+        }
+        @media (max-width: 767px) {
+            .hex-row { margin-top: -10px; width: 100%; gap: 3px; }
+            .hex-wrap { width: 25%; }
+            .hex-row-offset { transform: translateX(15%); }
+        }
+        .album-card {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease, filter 0.3s ease;
+            aspect-ratio: 1 / 1.15;
+        }
+        .album-card:hover {
+            transform: scale(1.08) !important;
+            filter: brightness(1.1);
+            z-index: 5;
+        }
+        .album-card .album-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-size: cover;
+            background-position: center;
+            transition: opacity 2s ease-in-out;
+        }
+        .album-card .album-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(ellipse at center, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.15) 70%);
+            z-index: 1;
+        }
+        .album-card .album-info {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 2;
+            color: white;
+            width: 85%;
+        }
+        .album-card .album-info h3 {
+            font-size: 0.9rem;
+            font-weight: 800;
+            margin-bottom: 0.2rem;
+            text-shadow: 0 2px 6px rgba(0,0,0,0.9);
+            line-height: 1.1;
+        }
+        @media (min-width: 1024px) {
+            .album-card .album-info h3 { font-size: 1.2rem; }
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 99999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-image-container {
+            position: relative;
+            width: 90vw;
+            height: 75vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-image-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+            transition: opacity 0.8s ease-in-out;
+        }
+        .modal-close, .modal-nav {
+            position: absolute;
+            color: white;
+            cursor: pointer;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            transition: background 0.3s;
+            z-index: 10000;
+        }
+        .modal-close { top: 1.5rem; right: 1.5rem; width: 50px; height: 50px; font-size: 2.5rem; }
+        .modal-nav { top: 50%; transform: translateY(-50%); width: 60px; height: 60px; font-size: 3rem; }
+        .modal-nav.prev { left: 1.5rem; }
+        .modal-nav.next { right: 1.5rem; }
+        .modal-close:hover, .modal-nav:hover { background: rgba(255,255,255,0.3); }
+        .modal-album-title { color: white; font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .modal-info { color: white; margin-top: 1rem; opacity: 0.7; }
+
+        /* Manifiesto */
+        .manifiesto-sticky {
+            position: sticky;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        .manifiesto-content { padding: 3rem 0 4rem; width: 100%; }
+        .manifiesto-titulo {
+            font-weight: 900;
+            font-size: clamp(3rem, 8vw, 6rem);
+            text-transform: uppercase;
+            letter-spacing: -0.03em;
+            line-height: 1.15;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .manifiesto-cuerpo {
+            font-weight: 400;
+            font-size: clamp(1.1rem, 2.2vw, 2rem);
+            line-height: 1.5;
+            text-align: left;
+            color: rgba(255, 255, 255, 0.92);
+        }
+        .mw { opacity: 0; transition: opacity 0.2s ease; }
+        .mw.vis { opacity: 1; }
+
+        /* Map Overrides */
+        .leaflet-container { background: transparent !important; font-family: 'Work Sans', sans-serif; }
+        .leaflet-tile-pane { filter: saturate(1.5) hue-rotate(340deg) brightness(0.7) contrast(1.2); }
+        .marker-cluster-custom { background: none !important; }
+        .cluster-rij {
+            width: 52px; height: 52px; border-radius: 12px; background: #2d1b14; border: 2px solid #ff6b35;
+            display: flex; align-items: center; justify-content: center; position: relative;
+        }
+        .cluster-rij img { width: 36px; height: 36px; object-fit: contain; filter: brightness(0) invert(1); }
+        .cluster-rij .cluster-count {
+            position: absolute; bottom: -8px; right: -8px; background: #facc15; color: #1a0f0a;
+            font-size: 0.75rem; font-weight: 800; width: 24px; height: 24px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .org-marker {
+            width: 48px; height: 48px; border-radius: 10px; border: 2px solid #ff6b35; background: #2d1b14;
+            display: flex; align-items: center; justify-content: center; overflow: hidden;
+        }
+        .org-marker img { width: 100%; height: 100%; object-fit: cover; }
+        .leaflet-popup-content-wrapper { background: #2d1b14; color: white; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; }
+        .leaflet-popup-tip { background: #2d1b14; border-top: 1px solid rgba(255,255,255,0.1); border-left: 1px solid rgba(255,255,255,0.1); }
+        .org-popup { min-width: 200px; }
+        .org-popup h3 { font-size: 1rem; font-weight: 700; margin: 0 0 4px 0; color: #ff6b35; }
+        .org-popup p { margin: 2px 0; font-size: 0.8rem; color: #ccc; }
+        .org-popup a { color: #facc15; text-decoration: none; }
+        .org-popup a:hover { text-decoration: underline; }
+
+        /* Filter Buttons */
+        .filter-btn {
+            padding: 0.4rem 1rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600;
+            border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7);
+            cursor: pointer; transition: all 0.2s; white-space: nowrap;
+        }
+        .filter-btn:hover { border-color: #ff6b35; color: #ff6b35; }
+        .filter-btn.active { background: #ff6b35; border-color: #ff6b35; color: white; }
+
+        /* Search Results */
+        .search-result-item {
+            padding: 0.6rem 1rem; cursor: pointer; color: white; font-size: 0.85rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.15s;
+        }
+        .search-result-item:hover { background: rgba(255,107,53,0.2); }
+        .search-result-item .sr-name { font-weight: 700; }
+        .search-result-item .sr-loc { font-size: 0.7rem; opacity: 0.6; }
+
+        /* Marquee */
+        .logos-marquee { overflow: hidden; position: relative; width: 100%; }
+        .logos-marquee::before, .logos-marquee::after {
+            content: ''; position: absolute; top: 0; width: 60px; height: 100%; z-index: 2;
+        }
+        .logos-marquee::before { left: 0; background: linear-gradient(to right, #1a0f0a, transparent); }
+        .logos-marquee::after { right: 0; background: linear-gradient(to left, #1a0f0a, transparent); }
+        .marquee-track {
+            display: flex; align-items: center; gap: 3rem; animation: marquee-scroll 40s linear infinite; width: max-content;
+        }
+        .marquee-track:hover { animation-play-state: paused; }
+        .marquee-track img {
+            height: 50px; width: auto; max-width: 120px; object-fit: contain;
+            filter: grayscale(1) opacity(0.5); transition: all 0.3s;
+        }
+        .marquee-track img:hover { filter: grayscale(0) opacity(1); }
+        @keyframes marquee-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+        /* Directory Card */
+        .dir-card {
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 1.5rem; padding: 1.5rem; transition: all 0.3s; cursor: pointer;
+        }
+        .dir-card:hover {
+            background: rgba(255,255,255,0.05); border-color: rgba(255,107,53,0.3);
+            transform: translateY(-4px); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .dir-card-detail {
+            max-height: 0; overflow: hidden; transition: max-height 0.4s ease, opacity 0.3s ease, margin-top 0.3s ease;
+            opacity: 0; margin-top: 0;
+        }
+        .dir-card.expanded .dir-card-detail { max-height: 500px; opacity: 1; margin-top: 1rem; }
+        .dir-card-toggle { transition: transform 0.3s; }
+        .dir-card.expanded .dir-card-toggle { transform: rotate(45deg); color: #ff6b35; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display min-h-screen flex flex-col antialiased selection:bg-primary selection:text-white bg-paper-pattern">
+
+    <!-- Preloader -->
+    <div id="preloader">
+        <div id="preloader-bg"></div>
+        <div id="preloader-overlay"></div>
+        <video id="preloader-video" autoplay loop muted playsinline>
+            <source src="assets/preload/reloj_jaguar.webm" type="video/webm">
+        </video>
+    </div>
+
+    <!-- Header -->
+    <header class="fixed top-0 w-full z-50 transition-all duration-300 backdrop-blur-xl bg-background-dark/80 border-b border-white/5" id="main-nav">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-4 group cursor-pointer">
+                <img src="assets/logos/RIJ_SIGLA.png?v=20260218" alt="Red Intercultural Juvenil" class="h-12" style="filter: drop-shadow(2px 3px 4px rgba(80, 30, 0, 0.5));">
+                <span class="text-white/90 text-sm font-light tracking-[0.2em] hidden sm:block uppercase">Red Intercultural Juvenil</span>
+            </div>
+            <nav class="hidden md:flex items-center gap-6">
+                <a class="text-xs font-bold uppercase tracking-widest text-white/70 hover:text-primary transition-colors" href="#inicio">Inicio</a>
+                <a class="text-xs font-bold uppercase tracking-widest text-white/70 hover:text-primary transition-colors" href="#galeria">Galería</a>
+                <a class="text-xs font-bold uppercase tracking-widest text-white/70 hover:text-primary transition-colors" href="#manifiesto">Manifiesto</a>
+                <a class="text-xs font-bold uppercase tracking-widest text-white/70 hover:text-primary transition-colors" href="#mapa">Mapa</a>
+                <a class="text-xs font-bold uppercase tracking-widest text-white/70 hover:text-primary transition-colors" href="#directorio">Directorio</a>
+                <a class="text-xs font-bold uppercase tracking-widest text-white/70 hover:text-primary transition-colors" href="#articulaciones">Articulaciones</a>
+            </nav>
+            <button id="menu-toggle" class="md:hidden text-white">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Aforismos Banner -->
+    <div class="aforismos-banner" id="aforismos-banner" style="top: 80px;">
+        <div class="aforismo-flash" id="aforismo-flash">
+            <div class="aforismo-frase" id="aforismo-frase"></div>
+            <div class="aforismo-org" id="aforismo-org"></div>
+        </div>
+    </div>
+
+    <!-- Inicio -->
+    <section id="inicio" class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 cursor-pointer">
+        <div id="bg-layer-1" class="absolute inset-0 bg-cover bg-center bg-no-repeat z-0 opacity-100 transition-opacity duration-[3s] ease-in-out"></div>
+        <div id="bg-layer-2" class="absolute inset-0 bg-cover bg-center bg-no-repeat z-10 opacity-0 transition-opacity duration-[3s] ease-in-out"></div>
+        <div class="absolute inset-0 bg-[#120a06]/70 bg-stone-pattern z-20"></div>
+        
+        <div class="relative z-30 container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-[80vh]">
+            <div class="order-2 lg:order-1 text-center lg:text-left relative fade-in">
+                <div class="w-20 h-1 bg-primary mb-8 mx-auto lg:mx-0"></div>
+                <img src="assets/logos/RIJ_COMP_NEG.png?v=20260218" alt="Red Intercultural Juvenil" class="w-full max-w-md mx-auto lg:mx-0 mb-6" style="filter: drop-shadow(4px 6px 12px rgba(0, 0, 0, 0.8));">
+                <p class="text-lg md:text-2xl text-slate-300 font-light max-w-lg mx-auto lg:mx-0 leading-relaxed mb-10 border-l-2 border-primary/30 pl-6 italic" style="text-shadow: 0 2px 10px rgba(0,0,0,0.8);">
+                    Tejer identidades para fortalecer el territorio
+                </p>
+                <div class="flex flex-col sm:flex-row gap-5 justify-center lg:justify-start">
+                    <a href="#mapa" class="h-14 px-8 rounded-full bg-white text-background-dark text-sm font-bold uppercase tracking-widest hover:bg-slate-200 transition-all shadow-xl flex items-center justify-center">
+                        Explorar Territorio
+                    </a>
+                </div>
+            </div>
+            <div class="order-1 lg:order-2 relative flex justify-center items-center h-[400px] lg:h-[600px]">
+                <div class="absolute w-[120%] h-[120%] bg-gradient-to-br from-primary/20 via-transparent to-secondary/10 blur-3xl rounded-full"></div>
+                <div class="relative w-full h-full max-w-[500px] max-h-[500px] jaguar-rosette-mask overflow-hidden bg-zinc-800 shadow-2xl">
+                    <video id="hero-video" autoplay loop muted playsinline class="w-full h-full object-cover scale-110">
+                        <source src="assets/preload/reloj_jaguar.webm" type="video/webm">
+                    </video>
+                    <div class="absolute inset-0 bg-gradient-to-t from-background-dark/60 via-transparent to-transparent"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Galería -->
+    <section id="galeria" class="py-24 bg-background-light dark:bg-[#1a120e] relative">
+        <div class="absolute inset-0 bg-paper-pattern opacity-50 pointer-events-none"></div>
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+                <div>
+                    <h2 class="text-primary text-xs font-bold tracking-[0.3em] uppercase mb-4">Mirada de Jaguar</h2>
+                    <h3 class="text-4xl md:text-5xl font-black text-slate-900 dark:text-white leading-tight">Los Ojos<br/>del Jaguar</h3>
+                </div>
+                <p class="text-slate-600 dark:text-slate-400 max-w-md text-right md:text-left text-lg leading-relaxed">
+                    Haz clic en un álbum para ver las fotos.
+                </p>
+            </div>
+            <div id="gallery-grid"></div>
+        </div>
+    </section>
+
+    <!-- Modal Lightbox -->
+    <div class="modal-overlay" id="album-modal">
+        <button class="modal-close" onclick="closeAlbumModal()">&times;</button>
+        <button class="modal-nav prev" onclick="prevPhoto()">&#8249;</button>
+        <button class="modal-nav next" onclick="nextPhoto()">&#8250;</button>
+        <div class="modal-album-title" id="modal-album-title"></div>
+        <div class="modal-image-container">
+            <img id="modal-image" src="" alt="">
+        </div>
+        <div class="modal-info" id="modal-info"></div>
+    </div>
+
+    <!-- Manifiesto -->
+    <section id="manifiesto" class="relative text-white bg-deep-purple overflow-hidden">
+        <div class="manifiesto-sticky" id="manifiesto-sticky">
+            <div class="absolute inset-0 opacity-20 bg-stone-pattern"></div>
+            <div class="absolute top-0 right-0 w-96 h-96 bg-primary rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
+            <div class="absolute bottom-0 left-0 w-96 h-96 bg-secondary rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" style="animation-delay: 1s;"></div>
+
+            <div class="manifiesto-content">
+                <div class="max-w-5xl mx-auto px-6 relative z-10">
+                    <div class="manifiesto-titulo" id="manifiesto-titulo"></div>
+                    <div class="manifiesto-cuerpo" id="manifiesto-cuerpo"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mapa -->
+    <section id="mapa" class="relative h-screen bg-background-dark overflow-hidden">
+        <div id="map" class="absolute inset-0 z-0"></div>
+        
+        <div class="absolute top-24 left-6 md:left-12 z-20 w-80 bg-background-dark/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl">
+            <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">public</span>
+                Territorio
+            </h3>
+            <div class="relative mb-6">
+                <input type="text" id="map-search" class="w-full bg-white/5 border border-white/10 rounded-lg py-2 pl-3 pr-10 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" placeholder="Buscar organización..." autocomplete="off"/>
+                <span class="material-symbols-outlined absolute right-3 top-2 text-slate-500 text-lg">search</span>
+                <div id="map-search-results" class="absolute z-50 left-0 right-0 mt-1 bg-surface-dark rounded-xl shadow-2xl border border-white/15 hidden max-h-60 overflow-y-auto"></div>
+            </div>
+            <div class="flex flex-wrap gap-2" id="map-filters">
+                <button class="filter-btn" data-sector="Audiovisual">Audiovisual</button>
+                <button class="filter-btn" data-sector="Sonoro">Sonoro</button>
+                <button class="filter-btn" data-sector="Letras">Letras</button>
+                <button class="filter-btn" data-sector="Danza">Danza</button>
+                <button class="filter-btn" data-sector="Plástica">Plástica</button>
+                <button class="filter-btn" data-sector="Teatro">Teatro</button>
+                <button class="filter-btn" data-sector="Multidisciplinar">Multidisciplinar</button>
+                <button class="filter-btn" data-sector="Circo social">Circo</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Directorio -->
+    <section id="directorio" class="py-24 bg-[#f8f6f5] dark:bg-[#120a06] bg-paper-pattern relative">
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 border-b border-black/5 dark:border-white/5 pb-8">
+                <div>
+                    <h2 class="text-primary text-xs font-bold tracking-[0.3em] uppercase mb-4">La Manada</h2>
+                    <h3 class="text-4xl md:text-5xl font-black text-slate-900 dark:text-white">Directorio Vivo</h3>
+                </div>
+                <div class="flex flex-col items-end gap-4 w-full md:w-auto mt-6 md:mt-0">
+                    <div class="relative w-full md:w-64">
+                        <input type="text" id="dir-search" placeholder="Buscar..." class="w-full bg-white dark:bg-surface-dark border border-slate-200 dark:border-white/10 rounded-lg py-2 pl-3 pr-10 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-primary" autocomplete="off">
+                        <div id="dir-search-results" class="absolute z-50 left-0 right-0 mt-1 bg-white dark:bg-surface-dark rounded-xl shadow-2xl border border-slate-200 dark:border-white/15 hidden max-h-60 overflow-y-auto"></div>
+                    </div>
+                    <div class="flex flex-wrap justify-end gap-2 w-full md:w-auto" id="dir-filters">
+                        <button class="filter-btn" data-sector="Audiovisual">Audiovisual</button>
+                        <button class="filter-btn" data-sector="Sonoro">Sonoro</button>
+                        <button class="filter-btn" data-sector="Letras">Letras</button>
+                        <button class="filter-btn" data-sector="Danza">Danza</button>
+                        <button class="filter-btn" data-sector="Plástica">Plástica</button>
+                        <button class="filter-btn" data-sector="Teatro">Teatro</button>
+                        <button class="filter-btn" data-sector="Multidisciplinar">Multidisciplinar</button>
+                        <button class="filter-btn" data-sector="Circo social">Circo</button>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="directorio-grid">
+                <!-- Cards -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Articulaciones -->
+    <section id="articulaciones" class="py-20 bg-[#150a06] relative overflow-hidden">
+        <div class="absolute inset-0 opacity-5 bg-[url('https://www.transparenttextures.com/patterns/fiber-paper.png')]"></div>
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-xs font-bold text-primary tracking-[0.3em] uppercase mb-4">El Enredo</h2>
+                <h3 class="text-4xl md:text-5xl font-black text-white">Articulaciones</h3>
+            </div>
+            <div class="grid md:grid-cols-2 gap-6 max-w-6xl mx-auto">
+                <div class="bg-white/5 backdrop-blur rounded-xl p-8 border border-white/10 hover:border-primary/50 transition-colors">
+                    <h3 class="text-2xl font-bold mb-4 text-white">Redam × Yucuta</h3>
+                    <p class="text-slate-400">Colaboración en proyectos de preservación cultural amazónica</p>
+                </div>
+                <div class="bg-white/5 backdrop-blur rounded-xl p-8 border border-white/10 hover:border-secondary/50 transition-colors">
+                    <h3 class="text-2xl font-bold mb-4 text-white">Kombilesa Mi × ODEC</h3>
+                    <p class="text-slate-400">Alianza para el fortalecimiento de identidades juveniles</p>
+                </div>
+                <div class="bg-white/5 backdrop-blur rounded-xl p-8 border border-white/10 hover:border-accent/50 transition-colors">
+                    <h3 class="text-2xl font-bold mb-4 text-white">Bari Rock × La Tigra</h3>
+                    <p class="text-slate-400">Fusión musical y cultural en territorios de frontera</p>
+                </div>
+                <div class="bg-white/5 backdrop-blur rounded-xl p-8 border border-white/10 hover:border-primary/50 transition-colors">
+                    <h3 class="text-2xl font-bold mb-4 text-white">Biohoty × Enraizarte</h3>
+                    <p class="text-slate-400">Intercambio de saberes ambientales y artísticos</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Salvaguarda -->
+    <section id="salvaguarda" class="py-24 bg-background-dark relative">
+        <div class="container mx-auto px-6">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="text-primary text-xs font-bold tracking-[0.3em] uppercase mb-4">Salvaguarda</h2>
+                <h3 class="text-4xl md:text-5xl font-black text-white mb-12">Cuando el Territorio Habla</h3>
+                <div class="bg-surface-dark rounded-3xl p-8 md:p-12 border border-white/5 text-left">
+                    <p class="text-lg text-slate-300 leading-relaxed mb-6">
+                        La salvaguarda no es solo un protocolo administrativo, es el compromiso de escuchar 
+                        las voces ancestrales que habitan los territorios donde trabajamos.
+                    </p>
+                    <p class="text-lg text-slate-300 leading-relaxed mb-6">
+                        Reconocemos que cada organización es guardiana de saberes, tradiciones y cosmovisiones 
+                        que merecen ser preservadas, transmitidas y celebradas.
+                    </p>
+                    <div class="border-l-4 border-primary pl-6 italic">
+                        <p class="text-xl text-white">"El territorio no es un lugar, es una memoria viva que late en cada uno de nosotros"</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Envolvente -->
+    <section id="envolvente" class="py-24 bg-deep-purple relative">
+        <div class="container mx-auto px-6">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-secondary text-xs font-bold tracking-[0.3em] uppercase mb-4 text-center">Envolvente</h2>
+                <h3 class="text-4xl md:text-5xl font-black text-white mb-12 text-center">Trascendente</h3>
+                <div class="bg-white/10 backdrop-blur rounded-3xl p-8 md:p-12 border border-white/10">
+                    <h3 class="text-2xl font-bold mb-8 text-white">Proceso de Integración a la Red</h3>
+                    <div class="space-y-8">
+                        <div class="flex items-start gap-6">
+                            <div class="bg-primary text-white rounded-full w-12 h-12 flex items-center justify-center font-bold flex-shrink-0 text-xl">1</div>
+                            <div>
+                                <h4 class="font-bold text-xl text-white mb-2">Manifestación de Interés</h4>
+                                <p class="text-slate-300">Las organizaciones expresan su deseo de formar parte de la red</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-6">
+                            <div class="bg-secondary text-background-dark rounded-full w-12 h-12 flex items-center justify-center font-bold flex-shrink-0 text-xl">2</div>
+                            <div>
+                                <h4 class="font-bold text-xl text-white mb-2">Caracterización</h4>
+                                <p class="text-slate-300">Proceso de conocimiento mutuo y reconocimiento territorial</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-6">
+                            <div class="bg-accent text-white rounded-full w-12 h-12 flex items-center justify-center font-bold flex-shrink-0 text-xl">3</div>
+                            <div>
+                                <h4 class="font-bold text-xl text-white mb-2">Formalización</h4>
+                                <p class="text-slate-300">Acuerdos de colaboración y participación activa en la red</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contacto" class="bg-background-dark text-slate-400 py-16 border-t border-white/5 relative">
+        <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
+        <div class="container mx-auto px-6">
+            
+            <p class="text-center text-white/40 text-xs uppercase tracking-widest mb-6">Organizaciones participantes</p>
+            <div class="logos-marquee mb-16" id="logos-marquee">
+                <div class="marquee-track" id="marquee-track"></div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-16">
+                <div class="bg-surface-dark rounded-2xl p-8 text-center border border-white/5">
+                    <h3 class="text-xl font-bold text-white mb-4">Email</h3>
+                    <a href="mailto:redinterculturaljuvenilcol@gmail.com" class="text-primary hover:text-primary-hover text-lg transition-colors">
+                        redinterculturaljuvenilcol@gmail.com
+                    </a>
+                </div>
+                <div class="bg-surface-dark rounded-2xl p-8 text-center border border-white/5">
+                    <h3 class="text-xl font-bold text-white mb-4">Síguenos</h3>
+                    <div class="flex justify-center gap-6">
+                        <a href="https://www.instagram.com/rijcol" target="_blank" rel="noopener" class="w-12 h-12 rounded-full bg-white/5 hover:bg-primary flex items-center justify-center transition-colors text-white group">
+                            <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                        </a>
+                        <span class="text-white/60 text-sm self-center">@rijcol</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col md:flex-row justify-between items-center gap-8 border-t border-white/5 pt-8">
+                <div class="flex items-center gap-3">
+                    <img src="assets/logos/RIJ_SIGLA.png?v=20260218" alt="RIJ" class="h-10 opacity-50">
+                </div>
+                <div class="text-center md:text-right text-xs text-slate-500">
+                    <p class="mb-2"><strong class="text-slate-400">Orientación Estratégica:</strong> Jamie Ruiz | <strong class="text-slate-400">Realización Gráfica y Audiovisual:</strong> Felipe Camacho Otero</p>
+                    <p>© 2026 Red Intercultural Juvenil · Todos los derechos reservados</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Array de fotos de organizaciones
+        const fotosOrgs = [
+            'assets/photos_orgs/01_CODIGO_ESTILO_CREW_2025.jpg',
+            'assets/photos_orgs/01_CUMBRE_CASA_CULTURAL.jpg',
+            'assets/photos_orgs/01_MALOKA_JOVEN_2025.jpg',
+            'assets/photos_orgs/01_RED_CEPELA_2025.jpg',
+            'assets/photos_orgs/01_THE_GIANT_CORPORATION_2025.jpg',
+            'assets/photos_orgs/02_CODIGO_ESTILO_CREW_2025.jpg',
+            'assets/photos_orgs/02_CUMBRE_CASA_CULTURAL.jpg',
+            'assets/photos_orgs/02_MALOKA_JOVEN_2025.jpg',
+            'assets/photos_orgs/02_RED_CEPELA_2025.jpg',
+            'assets/photos_orgs/02_THE_GIANT_CORPORATION_2025.jpg',
+            'assets/photos_orgs/03_CODIGO_ESTILO_CREW_2025.jpg',
+            'assets/photos_orgs/03_CUMBRE_CASA_CULTURAL.jpg',
+            'assets/photos_orgs/03_MALOKA_JOVEN_2025.jpg',
+            'assets/photos_orgs/03_RED_CEPELA_2025.jpg',
+            'assets/photos_orgs/03_THE_GIANT_CORPORATION_2025.jpg',
+            'assets/photos_orgs/04_CODIGO_ESTILO_CREW_2025.jpg',
+            'assets/photos_orgs/04_CUMBRE_CASA_CULTURAL.jpg',
+            'assets/photos_orgs/04_MALOKA_JOVEN_2025.jpg',
+            'assets/photos_orgs/04_RED_CEPELA_2025.jpg',
+            'assets/photos_orgs/04_THE_GIANT_CORPORATION_2025.jpg',
+            'assets/photos_orgs/05_CODIGO_ESTILO_CREW_2025.jpg',
+            'assets/photos_orgs/05_CUMBRE_CASA_CULTURAL.jpg',
+            'assets/photos_orgs/05_MALOKA_JOVEN_2025.jpg',
+            'assets/photos_orgs/05_RED_CEPELA_2025.jpg',
+            'assets/photos_orgs/05_THE_GIANT_CORPORATION_2025.jpg',
+            'assets/photos_orgs/06_CODIGO_ESTILO_CREW_2025.jpg',
+            'assets/photos_orgs/06_CUMBRE_CASA_CULTURAL.jpg',
+            'assets/photos_orgs/06_MALOKA_JOVEN_2025.jpg',
+            'assets/photos_orgs/06_RED_CEPELA_2025.jpg',
+            'assets/photos_orgs/06_THE_GIANT_CORPORATION_2025.jpg',
+            'assets/photos_orgs/07_CODIGO_ESTILO_CREW_2025.jpg',
+            'assets/photos_orgs/07_CUMBRE_CASA_CULTURAL.jpg',
+            'assets/photos_orgs/07_MALOKA_JOVEN_2025.jpg',
+            'assets/photos_orgs/07_RED_CEPELA_2025.jpg',
+            'assets/photos_orgs/07_THE_GIANT_CORPORATION_2025.jpg',
+            'assets/photos_orgs/08_CODIGO_ESTILO_CREW_2025.jpg',
+            'assets/photos_orgs/08_CUMBRE_CASA_CULTURAL.jpg',
+            'assets/photos_orgs/08_MALOKA_JOVEN_2025.jpg',
+            'assets/photos_orgs/08_RED_CEPELA_2025.jpg',
+            'assets/photos_orgs/08_THE_GIANT_CORPORATION_2025.jpg',
+            'assets/photos_orgs/09_CODIGO_ESTILO_CREW_2025.jpg',
+            'assets/photos_orgs/09_CUMBRE_CASA_CULTURAL.jpg',
+            'assets/photos_orgs/09_MALOKA_JOVEN_2025.jpg',
+            'assets/photos_orgs/09_RED_CEPELA_2025.jpg',
+            'assets/photos_orgs/09_THE_GIANT_CORPORATION_2025.jpg',
+            'assets/photos_orgs/10_CODIGO_ESTILO_CREW_2025.jpg',
+            'assets/photos_orgs/10_CUMBRE_CASA_CULTURAL.jpg',
+            'assets/photos_orgs/10_MALOKA_JOVEN_2025.jpg',
+            'assets/photos_orgs/10_RED_CEPELA_2025.jpg',
+            'assets/photos_orgs/10_THE_GIANT_CORPORATION_2025.jpg',
+            'assets/photos_orgs/11_CODIGO_ESTILO_CREW_2025.jpg',
+            'assets/photos_orgs/11_CUMBRE_CASA_CULTURAL.jpg',
+            'assets/photos_orgs/11_MALOKA_JOVEN_2025.jpg',
+            'assets/photos_orgs/11_RED_CEPELA_2025.jpg',
+            'assets/photos_orgs/11_THE_GIANT_CORPORATION_2025.jpg',
+            'assets/photos_orgs/12_CODIGO_ESTILO_CREW_2025.jpg',
+            'assets/photos_orgs/12_CUMBRE_CASA_CULTURAL.jpg',
+            'assets/photos_orgs/12_MALOKA_JOVEN_2025.jpg',
+            'assets/photos_orgs/12_RED_CEPELA_2025.jpg',
+            'assets/photos_orgs/12_THE_GIANT_CORPORATION_2025.jpg',
+            'assets/photos_orgs/13_CODIGO_ESTILO_CREW_2025.jpg',
+            'assets/photos_orgs/13_CUMBRE_CASA_CULTURAL.jpg',
+            'assets/photos_orgs/13_MALOKA_JOVEN_2025.jpg',
+            'assets/photos_orgs/13_RED_CEPELA_2025.jpg',
+            'assets/photos_orgs/13_THE_GIANT_CORPORATION_2025.jpg',
+            'assets/photos_orgs/14_CUMBRE_CASA_CULTURAL.jpg',
+            'assets/photos_orgs/14_MALOKA_JOVEN_2025.jpg',
+            'assets/photos_orgs/14_RED_CEPELA_2025.jpg',
+            'assets/photos_orgs/14_THE_GIANT_CORPORATION_2025.jpg',
+            'assets/photos_orgs/15_GUAQUE_SOPO_2025.jpg',
+            'assets/photos_orgs/15_MALOKA_JOVEN_2025.jpg',
+            'assets/photos_orgs/15_RED_CEPELA_2025.jpg',
+            'assets/photos_orgs/15_THE_GIANT_CORPORATION_2025.jpg',
+            'assets/photos_orgs/16_GUAQUE_SOPO_2025.jpg',
+            'assets/photos_orgs/16_RED_CEPELA_2025.jpg',
+            'assets/photos_orgs/17_GUAQUE_SOPO_2025.jpg',
+            'assets/photos_orgs/17_RED_CEPELA_2025.jpg',
+            'assets/photos_orgs/18_GUAQUE_SOPO_2025.jpg',
+            'assets/photos_orgs/18_RED_CEPELA_2025.jpg',
+            'assets/photos_orgs/19_GUAQUE_SOPO_2025.jpg',
+            'assets/photos_orgs/19_RED_CEPELA_2025.jpg',
+            'assets/photos_orgs/20_GUAQUE_SOPO_2025.jpg',
+            'assets/photos_orgs/20_RED_CEPELA_2025.jpg',
+            'assets/photos_orgs/21_GUAQUE_SOPO_2025.jpg',
+            'assets/photos_orgs/22_GUAQUE_SOPO_2025.jpg',
+            'assets/photos_orgs/23_GUAQUE_SOPO_2025.jpg',
+            'assets/photos_orgs/24_GUAQUE_SOPO_2025.jpg',
+            'assets/photos_orgs/25_GUAQUE_SOPO_2025.jpg',
+            'assets/photos_orgs/26_GUAQUE_SOPO_2025.jpg',
+            'assets/photos_orgs/27_GUAQUE_SOPO_2025.jpg',
+            'assets/photos_orgs/28_GUAQUE_SOPO_2025.jpg',
+            'assets/photos_orgs/29_GUAQUE_SOPO_2025.jpg',
+            'assets/photos_orgs/01_ELEMENTS_2025.jpg',
+            'assets/photos_orgs/02_ELEMENTS_2025.jpg',
+            'assets/photos_orgs/03_ELEMENTS_2025.jpg',
+            'assets/photos_orgs/04_ELEMENTS_2025.jpg',
+            'assets/photos_orgs/05_ELEMENTS_2025.jpg',
+            'assets/photos_orgs/06_ELEMENTS_2025.jpg',
+            'assets/photos_orgs/07_ELEMENTS_2025.jpg',
+            'assets/photos_orgs/08_ELEMENTS_2025.jpg',
+            'assets/photos_orgs/09_ELEMENTS_2025.jpg',
+            'assets/photos_orgs/10_ELEMENTS_2025.jpg',
+            'assets/photos_orgs/11_ELEMENTS_2025.jpg',
+            'assets/photos_orgs/12_ELEMENTS_2025.jpg',
+            'assets/photos_orgs/13_ELEMENTS_2025.jpg',
+            'assets/photos_orgs/14_ELEMENTS_2025.jpg',
+            'assets/photos_orgs/15_ELEMENTS_2025.jpg',
+            'assets/photos_orgs/01_INFLUENCERS_ETNICOS_2025.jpg',
+            'assets/photos_orgs/02_INFLUENCERS_ETNICOS_2025.jpg',
+            'assets/photos_orgs/03_INFLUENCERS_ETNICOS_2025.jpg',
+            'assets/photos_orgs/04_INFLUENCERS_ETNICOS_2025.jpg',
+            'assets/photos_orgs/05_INFLUENCERS_ETNICOS_2025.jpg',
+            'assets/photos_orgs/06_INFLUENCERS_ETNICOS_2025.jpg',
+            'assets/photos_orgs/07_INFLUENCERS_ETNICOS_2025.jpg',
+            'assets/photos_orgs/08_INFLUENCERS_ETNICOS_2025.jpg',
+            'assets/photos_orgs/09_INFLUENCERS_ETNICOS_2025.jpg',
+            'assets/photos_orgs/10_INFLUENCERS_ETNICOS_2025.jpg',
+            'assets/photos_orgs/11_INFLUENCERS_ETNICOS_2025.jpg',
+            'assets/photos_orgs/12_INFLUENCERS_ETNICOS_2025.jpg',
+            'assets/photos_orgs/13_INFLUENCERS_ETNICOS_2025.jpg',
+            'assets/photos_orgs/14_INFLUENCERS_ETNICOS_2025.jpg',
+            'assets/photos_orgs/15_INFLUENCERS_ETNICOS_2025.jpg',
+            'assets/photos_orgs/16_INFLUENCERS_ETNICOS_2025.jpg',
+            'assets/photos_orgs/01_ALTERNATIVO_2025.jpg',
+            'assets/photos_orgs/02_ALTERNATIVO_2025.jpg',
+            'assets/photos_orgs/03_ALTERNATIVO_2025.jpg',
+            'assets/photos_orgs/04_ALTERNATIVO_2025.jpg',
+            'assets/photos_orgs/05_ALTERNATIVO_2025.jpg',
+            'assets/photos_orgs/06_ALTERNATIVO_2025.jpg',
+            'assets/photos_orgs/07_ALTERNATIVO_2025.jpg',
+            'assets/photos_orgs/08_ALTERNATIVO_2025.jpg',
+            'assets/photos_orgs/09_ALTERNATIVO_2025.jpg',
+            'assets/photos_orgs/10_ALTERNATIVO_2025.jpg',
+            'assets/photos_orgs/11_ALTERNATIVO_2025.jpg',
+            'assets/photos_orgs/12_ALTERNATIVO_2025.jpg',
+            'assets/photos_orgs/13_ALTERNATIVO_2025.jpg',
+            'assets/photos_orgs/14_ALTERNATIVO_2025.jpg',
+            'assets/photos_orgs/15_ALTERNATIVO_2025.jpg'
+        ];
+
+        // Shuffle logic
+        let shuffledPhotos = [];
+        let currentShuffleIndex = 0;
+
+        function createShuffle() {
+            shuffledPhotos = [...fotosOrgs];
+            for (let i = shuffledPhotos.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffledPhotos[i], shuffledPhotos[j]] = [shuffledPhotos[j], shuffledPhotos[i]];
+            }
+            currentShuffleIndex = 0;
+        }
+
+        function getNextPhoto() {
+            if (currentShuffleIndex >= shuffledPhotos.length) createShuffle();
+            return shuffledPhotos[currentShuffleIndex++];
+        }
+
+        function getOrgFromPhoto(photoPath) {
+            const filename = photoPath.split('/').pop().toUpperCase();
+            if (filename.includes('CODIGO_ESTILO_CREW')) return organizaciones.find(org => org.nombre && org.nombre.toLowerCase().includes('código estilo'));
+            if (filename.includes('THE_GIANT_CORPORATION')) return organizaciones.find(org => org.nombre && org.nombre.toLowerCase().includes('giant'));
+            if (filename.includes('RED_CEPELA')) return organizaciones.find(org => org.nombre && org.nombre.toLowerCase().includes('cepela'));
+            if (filename.includes('CASA_CULTURAL')) return organizaciones.find(org => org.nombre && org.nombre.toLowerCase().includes('casa cultural'));
+            if (filename.includes('MALOKA')) return organizaciones.find(org => org.nombre && org.nombre.toLowerCase().includes('maloka'));
+            if (filename.includes('GUAQUE') || filename.includes('SOPO')) return organizaciones.find(org => org.nombre && (org.nombre.toLowerCase().includes('guaque') || org.municipio.toLowerCase().includes('sopó')));
+            if (filename.includes('ELEMENTS')) return organizaciones.find(org => org.nombre && org.nombre.toLowerCase().includes('elements'));
+            if (filename.includes('INFLUENCERS_ETNICOS')) return organizaciones.find(org => org.nombre && org.nombre.toLowerCase().includes('influencers'));
+            return null;
+        }
+
+        // Slideshow Hero
+        let currentPhotoPath = null;
+        let activeLayer = 1;
+        
+        function setRandomBackground(fade) {
+            const layer1 = document.getElementById('bg-layer-1');
+            const layer2 = document.getElementById('bg-layer-2');
+            if (!layer1 || !layer2) return;
+            
+            const randomPhoto = getNextPhoto();
+            currentPhotoPath = randomPhoto;
+            
+            if (!fade) {
+                layer1.style.backgroundImage = "url('" + randomPhoto + "')";
+                layer1.style.opacity = '1';
+                layer1.style.zIndex = '0';
+                layer2.style.opacity = '0';
+                layer2.style.zIndex = '1';
+                activeLayer = 1;
+                return;
+            }
+            
+            if (activeLayer === 1) {
+                layer2.style.transition = 'none';
+                layer2.style.opacity = '0';
+                layer2.style.zIndex = '1';
+                layer1.style.zIndex = '0';
+                layer2.style.backgroundImage = "url('" + randomPhoto + "')";
+                layer2.offsetHeight;
+                layer2.style.transition = 'opacity 3s ease-in-out';
+                requestAnimationFrame(() => requestAnimationFrame(() => layer2.style.opacity = '1'));
+                activeLayer = 2;
+            } else {
+                layer1.style.transition = 'none';
+                layer1.style.opacity = '0';
+                layer1.style.zIndex = '1';
+                layer2.style.zIndex = '0';
+                layer1.style.backgroundImage = "url('" + randomPhoto + "')";
+                layer1.offsetHeight;
+                layer1.style.transition = 'opacity 3s ease-in-out';
+                requestAnimationFrame(() => requestAnimationFrame(() => layer1.style.opacity = '1'));
+                activeLayer = 1;
+            }
+        }
+
+        function startPhotoRotation() {
+            setInterval(() => setRandomBackground(true), 5000);
+        }
+
+        // Aforismos
+        let aforismoIndex = 0;
+        let aforismosShuffled = [];
+        let aforismoInterval = null;
+
+        function shuffleAforismos() {
+            aforismosShuffled = [...aforismos];
+            for (let i = aforismosShuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [aforismosShuffled[i], aforismosShuffled[j]] = [aforismosShuffled[j], aforismosShuffled[i]];
+            }
+            aforismoIndex = 0;
+        }
+
+        function showNextAforismo() {
+            if (aforismoIndex >= aforismosShuffled.length) shuffleAforismos();
+            const item = aforismosShuffled[aforismoIndex++];
+            const flashEl = document.getElementById('aforismo-flash');
+            const fraseEl = document.getElementById('aforismo-frase');
+            const orgEl = document.getElementById('aforismo-org');
+
+            flashEl.classList.remove('visible');
+            setTimeout(() => {
+                fraseEl.textContent = '\u201c' + item.frase + '\u201d';
+                orgEl.textContent = item.org;
+                flashEl.classList.add('visible');
+                requestAnimationFrame(adjustNavPosition);
+            }, 800);
+        }
+
+        function adjustNavPosition() {
+            const nav = document.getElementById('main-nav');
+            const banner = document.getElementById('aforismos-banner');
+            if (nav && banner) {
+                const navHeight = nav.offsetHeight;
+                banner.style.top = navHeight + 'px';
+            }
+        }
+
+        function loadAforismos() {
+            shuffleAforismos();
+            const item = aforismosShuffled[aforismoIndex++];
+            document.getElementById('aforismo-frase').textContent = '\u201c' + item.frase + '\u201d';
+            document.getElementById('aforismo-org').textContent = item.org;
+            document.getElementById('aforismo-flash').classList.add('visible');
+            aforismoInterval = setInterval(showNextAforismo, 5000);
+            adjustNavPosition();
+        }
+
+        // Gallery
+        function getAlbums() {
+            const albums = {};
+            const albumNames = {
+                'CODIGO_ESTILO_CREW_2025': 'Código Estilo Crew 2025',
+                'CUMBRE_CASA_CULTURAL': 'Cumbre Casa Cultural',
+                'MALOKA_JOVEN_2025': 'Maloka Joven 2025',
+                'GUAQUE_SOPO_2025': 'Guaque Sopó 2025',
+                'RED_CEPELA_2025': 'Red Cepela 2025',
+                'THE_GIANT_CORPORATION_2025': 'The Giant Corporation 2025',
+                'ELEMENTS_2025': 'Elements 2025',
+                'INFLUENCERS_ETNICOS_2025': 'Influencers Étnicos 2025',
+                'ALTERNATIVO_2025': 'Alternativo 2025'
+            };
+            
+            fotosOrgs.forEach(foto => {
+                const filename = foto.split('/').pop();
+                const match = filename.match(/^\d+_(.+)\.jpg$/i);
+                if (match) {
+                    const key = match[1];
+                    if (!albums[key]) albums[key] = { name: albumNames[key] || key.replace(/_/g, ' '), photos: [] };
+                    albums[key].photos.push(foto);
+                }
+            });
+            return albums;
+        }
+
+        function generateJaguarSpot(numPoints) {
+            numPoints = numPoints || 24;
+            const points = [];
+            for (let i = 0; i < numPoints; i++) {
+                const angle = (2 * Math.PI * i) / numPoints;
+                const baseRx = 50, baseRy = 50;
+                const noise1 = Math.sin(angle * 3 + Math.random() * 2) * (3 + Math.random() * 5);
+                const noise2 = Math.cos(angle * 5 + Math.random() * 3) * (2 + Math.random() * 3);
+                const noise3 = Math.sin(angle * 7 + Math.random() * 4) * (1 + Math.random() * 2);
+                const r = baseRx + noise1 + noise2 + noise3;
+                const ry = baseRy + noise1 * 0.8 - noise2 * 0.6 + noise3 * 1.2;
+                const x = 50 + r * Math.cos(angle);
+                const y = 50 + ry * Math.sin(angle);
+                points.push(Math.round(Math.max(0, Math.min(100, x))) + '% ' + Math.round(Math.max(0, Math.min(100, y))) + '%');
+            }
+            return 'polygon(' + points.join(', ') + ')';
+        }
+
+        function applyJaguarSpots() {
+            const wraps = document.querySelectorAll('.hex-wrap');
+            const isMobile = window.innerWidth < 768;
+            wraps.forEach(wrap => {
+                var card = wrap.querySelector('.album-card');
+                if (!card) return;
+                card.style.clipPath = generateJaguarSpot(22 + Math.floor(Math.random() * 8));
+                var variation = 0.85 + (Math.random() * 0.30);
+                if (isMobile) wrap.style.width = (25 * variation).toFixed(1) + '%';
+                else wrap.style.width = Math.round(178 * variation) + 'px';
+                var rotation = (Math.random() - 0.5) * 6;
+                wrap.style.transform = 'rotate(' + rotation.toFixed(1) + 'deg)';
+            });
+        }
+
+        function startAlbumCoverSlideshows(albums) {
+            Object.keys(albums).forEach(key => {
+                const album = albums[key];
+                if (album.photos.length <= 1) return;
+                let idx = 0;
+                const bgEl = document.querySelector(`[data-album-key="${key}"]`);
+                if (!bgEl) return;
+                const card = bgEl.parentElement;
+                const bg2 = document.createElement('div');
+                bg2.className = 'album-bg';
+                bg2.style.opacity = '0';
+                card.insertBefore(bg2, bgEl.nextSibling);
+                let activeBg = bgEl, inactiveBg = bg2, hoverInterval = null;
+                
+                function doCrossfade() {
+                    idx = (idx + 1) % album.photos.length;
+                    inactiveBg.style.backgroundImage = `url('${album.photos[idx]}')`;
+                    inactiveBg.style.transition = 'none';
+                    inactiveBg.style.opacity = '0';
+                    inactiveBg.offsetHeight;
+                    inactiveBg.style.transition = 'opacity 2s ease-in-out';
+                    requestAnimationFrame(() => requestAnimationFrame(() => {
+                        inactiveBg.style.opacity = '1';
+                        activeBg.style.opacity = '0';
+                    }));
+                    [activeBg, inactiveBg] = [inactiveBg, activeBg];
+                }
+                
+                card.addEventListener('mouseenter', () => {
+                    doCrossfade();
+                    hoverInterval = setInterval(doCrossfade, 3000);
+                });
+                card.addEventListener('mouseleave', () => {
+                    if (hoverInterval) { clearInterval(hoverInterval); hoverInterval = null; }
+                });
+            });
+        }
+
+        let lastGalleryMode = null;
+        function loadGallery() {
+            const grid = document.getElementById('gallery-grid');
+            const albums = getAlbums();
+            const albumKeys = Object.keys(albums);
+            const isMobile = window.innerWidth < 768;
+            const mode = isMobile ? 'mobile' : 'desktop';
+            if (mode === lastGalleryMode) return;
+            lastGalleryMode = mode;
+            
+            const rows = [];
+            let i = 0;
+            if (isMobile) {
+                while (i < albumKeys.length) { rows.push(albumKeys.slice(i, i + 2)); i += 2; }
+            } else {
+                const cols = 3; let isOddRow = true;
+                while (i < albumKeys.length) {
+                    const rowSize = isOddRow ? cols : Math.max(cols - 1, 1);
+                    rows.push(albumKeys.slice(i, i + rowSize));
+                    i += rowSize; isOddRow = !isOddRow;
+                }
+            }
+            
+            grid.className = 'honeycomb';
+            let idx = 0;
+            grid.innerHTML = rows.map((row, rowIndex) => {
+                const items = row.map(key => {
+                    const album = albums[key];
+                    const coverPhoto = album.photos[0];
+                    const html = `
+                        <div class="hex-wrap">
+                            <div class="album-card" onclick="openAlbum('${key}')" id="album-${idx}">
+                                <div class="album-bg" style="background-image: url('${coverPhoto}'); opacity: 1;" data-album-key="${key}"></div>
+                                <div class="album-overlay"></div>
+                                <div class="album-info">
+                                    <h3>${album.name}</h3>
+                                    <p>📷 ${album.photos.length} fotos</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    idx++; return html;
+                }).join('');
+                const offsetClass = (isMobile && rowIndex % 2 === 1) ? ' hex-row-offset' : '';
+                return `<div class="hex-row${offsetClass}">${items}</div>`;
+            }).join('');
+            
+            applyJaguarSpots();
+            startAlbumCoverSlideshows(albums);
+        }
+
+        // Modal
+        let currentAlbumPhotos = [], currentPhotoIndex = 0, modalAutoplay = null;
+        function openAlbum(albumKey) {
+            const albums = getAlbums();
+            const album = albums[albumKey];
+            if (!album) return;
+            currentAlbumPhotos = album.photos;
+            currentPhotoIndex = 0;
+            document.getElementById('modal-album-title').textContent = album.name;
+            updateModalImage();
+            document.getElementById('album-modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            modalAutoplay = setInterval(() => {
+                currentPhotoIndex = (currentPhotoIndex + 1) % currentAlbumPhotos.length;
+                updateModalImage();
+            }, 5000);
+        }
+        function updateModalImage() {
+            const img = document.getElementById('modal-image');
+            img.style.opacity = '0';
+            setTimeout(() => {
+                img.src = currentAlbumPhotos[currentPhotoIndex];
+                img.onload = () => { img.style.opacity = '1'; };
+            }, 300);
+            document.getElementById('modal-info').textContent = `${currentPhotoIndex + 1} / ${currentAlbumPhotos.length}`;
+        }
+        function nextPhoto() { currentPhotoIndex = (currentPhotoIndex + 1) % currentAlbumPhotos.length; updateModalImage(); resetAutoplay(); }
+        function prevPhoto() { currentPhotoIndex = (currentPhotoIndex - 1 + currentAlbumPhotos.length) % currentAlbumPhotos.length; updateModalImage(); resetAutoplay(); }
+        function resetAutoplay() {
+            if (modalAutoplay) clearInterval(modalAutoplay);
+            modalAutoplay = setInterval(() => { currentPhotoIndex = (currentPhotoIndex + 1) % currentAlbumPhotos.length; updateModalImage(); }, 5000);
+        }
+        function closeAlbumModal() {
+            document.getElementById('album-modal').classList.remove('active');
+            document.body.style.overflow = '';
+            if (modalAutoplay) clearInterval(modalAutoplay);
+            modalAutoplay = null;
+        }
+        document.addEventListener('keydown', (e) => {
+            if (!document.getElementById('album-modal').classList.contains('active')) return;
+            if (e.key === 'Escape') closeAlbumModal();
+            if (e.key === 'ArrowRight') nextPhoto();
+            if (e.key === 'ArrowLeft') prevPhoto();
+        });
+
+        // Manifiesto
+        function initManifiestoTypewriter() {
+            const section = document.getElementById('manifiesto');
+            const stickyEl = document.getElementById('manifiesto-sticky');
+            const tituloEl = document.getElementById('manifiesto-titulo');
+            const cuerpoEl = document.getElementById('manifiesto-cuerpo');
+
+            const tituloText = 'EL RUGIDO';
+            const cuerpoText = 'Somos la cosecha del asfalto caliente, la generación que aprendió a florecer justo donde nos dijeron que no crecería nada. Nacimos del estallido, no para quedarnos en el grito, sino para organizar la esperanza y convertir la indignación en estructuras vivas. Desde la profundidad de la selva hasta la esquina del barrio, tejemos una red anfibia que conecta el remedio ancestral con el código urbano, entendiendo que la cultura no es un adorno, sino nuestra herramienta más afilada de defensa personal y colectiva. Aquí declaramos obsoleta la competencia: nuestra única política es la juntanza y nuestra venganza es la vida digna. No pedimos permiso para transformar el territorio; ya lo estamos haciendo, con la certeza de que nuestra rebeldía no es amarga, sino creadora, ruidosa y radicalmente alegre.';
+
+            function wordsToSpans(text) { return text.split(/\s+/).map(w => '<span class="mw">' + w + '</span>').join(' '); }
+            tituloEl.innerHTML = wordsToSpans(tituloText);
+            cuerpoEl.innerHTML = wordsToSpans(cuerpoText);
+
+            const allWords = section.querySelectorAll('.mw');
+            const totalWords = allWords.length;
+
+            function setStickyPosition() {
+                const nav = document.getElementById('main-nav');
+                const banner = document.getElementById('aforismos-banner');
+                const topOffset = (nav ? nav.offsetHeight : 0) + (banner ? banner.offsetHeight : 0);
+                stickyEl.style.top = topOffset + 'px';
+                stickyEl.style.height = 'calc(100vh - ' + topOffset + 'px)';
+            }
+            setStickyPosition();
+            section.style.minHeight = (window.innerHeight * 2.5) + 'px';
+
+            let wordsRevealed = 0, autoRevealInterval = null, autoRevealStarted = false, completed = false;
+
+            function revealWord() {
+                if (wordsRevealed >= totalWords) {
+                    if (autoRevealInterval) { clearInterval(autoRevealInterval); autoRevealInterval = null; }
+                    completed = true; return;
+                }
+                allWords[wordsRevealed].classList.add('vis');
+                wordsRevealed++;
+                if (stickyEl.scrollHeight > stickyEl.clientHeight) {
+                    const lastWord = allWords[wordsRevealed - 1];
+                    if (lastWord) {
+                        const wordRect = lastWord.getBoundingClientRect();
+                        const stickyRect = stickyEl.getBoundingClientRect();
+                        const targetScroll = (wordRect.top - stickyRect.top + stickyEl.scrollTop) - stickyEl.clientHeight * 0.6;
+                        if (targetScroll > 0) stickyEl.scrollTo({ top: targetScroll, behavior: 'smooth' });
+                    }
+                }
+            }
+
+            function startAutoReveal() {
+                if (autoRevealStarted) return;
+                autoRevealStarted = true;
+                autoRevealInterval = setInterval(revealWord, 80);
+            }
+
+            function resetAll() {
+                if (autoRevealInterval) { clearInterval(autoRevealInterval); autoRevealInterval = null; }
+                autoRevealStarted = false; wordsRevealed = 0; completed = false;
+                allWords.forEach(w => w.classList.remove('vis'));
+                stickyEl.scrollTop = 0;
+            }
+
+            function checkVisibility() {
+                const rect = section.getBoundingClientRect();
+                const vh = window.innerHeight;
+                if (rect.bottom < 0 || rect.top > vh) { if (wordsRevealed > 0) resetAll(); return; }
+                if (rect.top < vh * 0.66 && !completed) startAutoReveal();
+            }
+
+            let ticking = false;
+            window.addEventListener('scroll', function() {
+                if (!ticking) { requestAnimationFrame(function() { checkVisibility(); ticking = false; }); ticking = true; }
+            }, { passive: true });
+            window.addEventListener('resize', function() { setStickyPosition(); section.style.minHeight = (window.innerHeight * 2.5) + 'px'; });
+            checkVisibility();
+        }
+
+        // Map
+        let mapMarkers = [], mapClusterGroup = null, currentMapFilter = 'all', currentMapSearch = '';
+        function initMap() {
+            const defaultCenter = [4.0, -72.0], defaultZoom = 5;
+            const map = L.map('map', {
+                dragging: false, touchZoom: false, scrollWheelZoom: false, doubleClickZoom: false,
+                boxZoom: false, keyboard: false, zoomControl: false, zoomSnap: 0.5, zoomDelta: 0.5
+            }).setView(defaultCenter, defaultZoom);
+            window.mapInstance = map; window.mapDefaultCenter = defaultCenter; window.mapDefaultZoom = defaultZoom;
+            
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; CARTO', maxZoom: 20, subdomains: 'abcd'
+            }).addTo(map);
+
+            mapClusterGroup = L.markerClusterGroup({
+                maxClusterRadius: 55,
+                iconCreateFunction: function(cluster) {
+                    return L.divIcon({
+                        html: '<div class="cluster-rij"><img src="assets/logos/RIJ_SIGLA.png" alt="RIJ"><span class="cluster-count">' + cluster.getChildCount() + '</span></div>',
+                        className: 'marker-cluster-custom', iconSize: [52, 52], iconAnchor: [26, 26]
+                    });
+                },
+                spiderfyOnMaxZoom: true, showCoverageOnHover: false, zoomToBoundsOnClick: true, animate: true
+            });
+
+            organizaciones.forEach(org => {
+                if (!org.lat || !org.lng) return;
+                const hasLogo = org.logo && org.logo.length > 0;
+                const icon = L.divIcon({
+                    html: '<div class="org-marker">' + (hasLogo ? '<img src="' + org.logo + '" alt="' + org.nombre + '" onerror="this.src=\'assets/logos/RIJ_SIGLA.png\'">' : '<img src="assets/logos/RIJ_SIGLA.png" alt="RIJ">') + '</div>',
+                    className: '', iconSize: [48, 48], iconAnchor: [24, 24], popupAnchor: [0, -26]
+                });
+                const marker = L.marker([org.lat, org.lng], { icon: icon });
+                marker.orgData = org;
+                marker.on('click', function() { window._markerClicked = true; setTimeout(() => window._markerClicked = false, 500); });
+                
+                marker.bindPopup(
+                    '<div class="org-popup">' +
+                    '<h3>' + org.nombre + '</h3>' +
+                    '<p>' + org.municipio + '</p>' +
+                    '<p style="color:#888;font-size:0.7rem;">' + org.sectores.join(' · ') + '</p>' +
+                    '<p><a href="mailto:' + org.email + '">' + org.email + '</a></p>' +
+                    '</div>',
+                    { autoPanPadding: [20, 20], maxWidth: 250 }
+                );
+                mapMarkers.push(marker);
+            });
+
+            updateMapMarkers();
+            map.addLayer(mapClusterGroup);
+
+            mapClusterGroup.on('clusterclick', function() { window._markerClicked = true; setTimeout(() => window._markerClicked = false, 1000); });
+            map.on('popupclose', function() { setTimeout(() => { if (!window._markerClicked && !map._popup) map.flyTo(defaultCenter, defaultZoom, { duration: 0.8 }); }, 400); });
+            map.on('click', function() { if (!window._markerClicked && map.getZoom() !== defaultZoom) map.flyTo(defaultCenter, defaultZoom, { duration: 0.8 }); });
+
+            // Map Search
+            const searchInput = document.getElementById('map-search');
+            const searchResults = document.getElementById('map-search-results');
+            searchInput.addEventListener('input', function() {
+                const q = this.value.trim().toLowerCase();
+                currentMapSearch = q;
+                if (q.length < 1) { searchResults.classList.add('hidden'); searchResults.innerHTML = ''; updateMapMarkers(); return; }
+                const matches = organizaciones.filter(o => o.nombre.toLowerCase().includes(q) || o.municipio.toLowerCase().includes(q));
+                if (matches.length > 0) {
+                    searchResults.innerHTML = matches.map(o => '<div class="search-result-item" data-org-id="' + o.id + '"><span class="sr-name">' + o.nombre + '</span><br><span class="sr-loc">' + o.municipio + '</span></div>').join('');
+                    searchResults.classList.remove('hidden');
+                    searchResults.querySelectorAll('.search-result-item').forEach(el => {
+                        el.addEventListener('click', function() {
+                            const org = organizaciones.find(o => o.id === parseInt(this.dataset.orgId));
+                            if (org && org.lat && org.lng) {
+                                map.flyTo([org.lat, org.lng], 13, { duration: 0.8 });
+                                const m = mapMarkers.find(mk => mk.orgData && mk.orgData.id === org.id);
+                                if (m) setTimeout(() => m.openPopup(), 900);
+                            }
+                            searchInput.value = org ? org.nombre : '';
+                            searchResults.classList.add('hidden');
+                        });
+                    });
+                } else {
+                    searchResults.innerHTML = '<div class="search-result-item" style="opacity:0.4">Sin resultados</div>';
+                    searchResults.classList.remove('hidden');
+                }
+            });
+            document.addEventListener('click', e => { if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) searchResults.classList.add('hidden'); });
+
+            // Map Filters
+            document.querySelectorAll('#map-filters .filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (this.classList.contains('active')) {
+                        this.classList.remove('active'); currentMapFilter = 'all';
+                    } else {
+                        document.querySelectorAll('#map-filters .filter-btn').forEach(b => b.classList.remove('active'));
+                        this.classList.add('active'); currentMapFilter = this.dataset.sector;
+                    }
+                    updateMapMarkers();
+                    setTimeout(() => {
+                        if (currentMapFilter === 'all') map.flyTo(window.mapDefaultCenter, window.mapDefaultZoom, { duration: 0.8 });
+                        else if (mapClusterGroup.getLayers().length > 0) {
+                            var bounds = mapClusterGroup.getBounds();
+                            if (bounds.isValid()) map.flyToBounds(bounds.pad(0.3), { duration: 0.8 });
+                        }
+                    }, 100);
+                });
+            });
+        }
+
+        function updateMapMarkers() {
+            if (!mapClusterGroup) return;
+            mapClusterGroup.clearLayers();
+            mapMarkers.forEach(m => {
+                const org = m.orgData;
+                if (!org) return;
+                const matchesSector = currentMapFilter === 'all' || org.sectores.includes(currentMapFilter) || (currentMapFilter === 'Plástica' && org.sectores.includes('Cerámica'));
+                const matchesSearch = !currentMapSearch || org.nombre.toLowerCase().includes(currentMapSearch) || org.municipio.toLowerCase().includes(currentMapSearch);
+                if (matchesSector && matchesSearch) mapClusterGroup.addLayer(m);
+            });
+        }
+
+        // Directory
+        let currentDirFilter = 'all', currentDirSearch = '';
+        function loadDirectorio(orgsToShow) {
+            const grid = document.getElementById('directorio-grid');
+            const list = (orgsToShow || organizaciones).slice().sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'));
+            
+            grid.innerHTML = list.map(org => `
+                <div class="dir-card" onclick="this.classList.toggle('expanded')">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-16 h-16 rounded-2xl bg-white/5 p-1 flex items-center justify-center">
+                            ${org.logo ? `<img src="${org.logo}" alt="${org.nombre}" class="w-full h-full object-contain rounded-xl" onerror="this.style.display='none'">` : '<span class="text-2xl">🎨</span>'}
+                        </div>
+                        <div class="dir-card-toggle w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-white">
+                            <span class="material-symbols-outlined text-sm">add</span>
+                        </div>
+                    </div>
+                    <h4 class="text-xl font-bold text-white mb-1">${org.nombre}</h4>
+                    <p class="text-slate-400 text-sm mb-2 flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">location_on</span> ${org.municipio}</p>
+                    <div class="flex flex-wrap gap-1 mb-2">
+                        ${org.sectores.map(s => `<span class="px-2 py-1 rounded-full bg-primary/20 text-primary text-[10px] font-bold uppercase tracking-wider">${s}</span>`).join('')}
+                    </div>
+                    <div class="dir-card-detail">
+                        ${org.lema ? `<p class="text-xs italic text-slate-500 mb-3">"${org.lema}"</p>` : ''}
+                        <div class="text-sm text-slate-300 space-y-2">
+                            <p><strong class="text-white">Contacto:</strong> ${org.representante}</p>
+                            <p><a href="mailto:${org.email}" class="text-primary hover:underline" onclick="event.stopPropagation()">${org.email}</a></p>
+                            <p><a href="tel:${org.telefono}" class="text-primary hover:underline" onclick="event.stopPropagation()">${org.telefono}</a></p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateDirectorio() {
+            let filtered = organizaciones;
+            if (currentDirFilter !== 'all') filtered = filtered.filter(o => o.sectores.includes(currentDirFilter) || (currentDirFilter === 'Plástica' && o.sectores.includes('Cerámica')));
+            if (currentDirSearch) filtered = filtered.filter(o => o.nombre.toLowerCase().includes(currentDirSearch) || o.municipio.toLowerCase().includes(currentDirSearch));
+            loadDirectorio(filtered);
+        }
+
+        function initDirSearchAndFilters() {
+            const searchInput = document.getElementById('dir-search');
+            const searchResults = document.getElementById('dir-search-results');
+            searchInput.addEventListener('input', function() {
+                const q = this.value.trim().toLowerCase();
+                currentDirSearch = q;
+                if (q.length >= 1) {
+                    const matches = organizaciones.filter(o => o.nombre.toLowerCase().includes(q) || o.municipio.toLowerCase().includes(q));
+                    if (matches.length > 0) {
+                        searchResults.innerHTML = matches.map(o => '<div class="search-result-item" data-org-id="' + o.id + '"><span class="sr-name text-slate-900 dark:text-white">' + o.nombre + '</span><br><span class="sr-loc text-slate-500">' + o.municipio + '</span></div>').join('');
+                        searchResults.classList.remove('hidden');
+                        searchResults.querySelectorAll('.search-result-item').forEach(el => {
+                            el.addEventListener('click', function() {
+                                const org = organizaciones.find(o => o.id === parseInt(this.dataset.orgId));
+                                if (org) { searchInput.value = org.nombre; currentDirSearch = org.nombre.toLowerCase(); }
+                                searchResults.classList.add('hidden'); updateDirectorio();
+                            });
+                        });
+                    } else searchResults.classList.add('hidden');
+                } else searchResults.classList.add('hidden');
+                updateDirectorio();
+            });
+            document.addEventListener('click', e => { if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) searchResults.classList.add('hidden'); });
+
+            document.querySelectorAll('#dir-filters .filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (this.classList.contains('active')) {
+                        this.classList.remove('active'); currentDirFilter = 'all';
+                    } else {
+                        document.querySelectorAll('#dir-filters .filter-btn').forEach(b => b.classList.remove('active'));
+                        this.classList.add('active'); currentDirFilter = this.dataset.sector;
+                    }
+                    updateDirectorio();
+                });
+            });
+        }
+
+        // Marquee
+        function initLogosMarquee() {
+            const track = document.getElementById('marquee-track');
+            if (!track) return;
+            const logos = organizaciones.filter(o => o.logo && o.logo.length > 0).map(o => '<img src="' + o.logo + '" alt="' + o.nombre + '" title="' + o.nombre + '" loading="lazy">');
+            track.innerHTML = logos.join('') + logos.join('');
+        }
+
+        // Preloader
+        (function() {
+            const preloader = document.getElementById('preloader');
+            const preloaderBg = document.getElementById('preloader-bg');
+            const bgImages = ['assets/backgrownd/01_MAPA_JAGUAR 2.jpg', 'assets/backgrownd/02_selva.jpg', 'assets/backgrownd/03_HERO.jpg', 'assets/backgrownd/04_Jaguar rojo 1.jpg', 'assets/backgrownd/05_Lomo IMPASTO.jpg'];
+            let bgIndex = 0;
+            preloaderBg.style.backgroundImage = 'url("' + bgImages[0] + '")';
+            const bgInterval = setInterval(() => { bgIndex = (bgIndex + 1) % bgImages.length; preloaderBg.style.backgroundImage = 'url("' + bgImages[bgIndex] + '")'; }, 1500);
+            
+            let dismissed = false;
+            function dismissPreloader() {
+                if (dismissed) return; dismissed = true; clearInterval(bgInterval);
+                preloader.classList.add('hide'); setTimeout(() => preloader.remove(), 700);
+            }
+            
+            Promise.all([
+                new Promise(r => setTimeout(r, 3000)),
+                new Promise(r => { if (document.readyState === 'complete') r(); else window.addEventListener('load', r); })
+            ]).then(dismissPreloader);
+            setTimeout(dismissPreloader, 10000);
+        })();
+
+        // Init
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile Menu
+            const menuToggle = document.getElementById('menu-toggle');
+            const mobileMenu = document.createElement('div');
+            mobileMenu.className = 'hidden md:hidden absolute top-full left-0 right-0 shadow-lg py-4 bg-background-dark/95 backdrop-blur-xl border-b border-white/10';
+            mobileMenu.innerHTML = `
+                <ul class="flex flex-col space-y-2 px-6">
+                    <li><a href="#inicio" class="block py-2 text-white/85 hover:text-primary">Inicio</a></li>
+                    <li><a href="#galeria" class="block py-2 text-white/85 hover:text-primary">Galería</a></li>
+                    <li><a href="#manifiesto" class="block py-2 text-white/85 hover:text-primary">Manifiesto</a></li>
+                    <li><a href="#mapa" class="block py-2 text-white/85 hover:text-primary">Mapa</a></li>
+                    <li><a href="#directorio" class="block py-2 text-white/85 hover:text-primary">Directorio</a></li>
+                    <li><a href="#articulaciones" class="block py-2 text-white/85 hover:text-primary">Articulaciones</a></li>
+                </ul>
+            `;
+            menuToggle.parentElement.appendChild(mobileMenu);
+            menuToggle.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+            mobileMenu.querySelectorAll('a').forEach(link => link.addEventListener('click', () => mobileMenu.classList.add('hidden')));
+
+            // Hero click
+            document.getElementById('inicio').addEventListener('click', (e) => {
+                if (e.target.tagName === 'SECTION' || e.target.id === 'inicio') {
+                    window.location.hash = '#mapa';
+                    setTimeout(() => document.getElementById('mapa').scrollIntoView({ behavior: 'smooth' }), 100);
+                }
+            });
+
+            createShuffle();
+            setRandomBackground(false);
+            startPhotoRotation();
+            loadAforismos();
+            loadGallery();
+            loadDirectorio();
+            initDirSearchAndFilters();
+            initMap();
+            initManifiestoTypewriter();
+            initLogosMarquee();
+
+            window.addEventListener('resize', adjustNavPosition);
+            let galleryResizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(galleryResizeTimer);
+                galleryResizeTimer = setTimeout(() => {
+                    const currentMode = window.innerWidth < 768 ? 'mobile' : 'desktop';
+                    if (currentMode !== lastGalleryMode) { lastGalleryMode = null; loadGallery(); }
+                }, 250);
+            });
+        });
+    </script>
+</body>
+</html>
