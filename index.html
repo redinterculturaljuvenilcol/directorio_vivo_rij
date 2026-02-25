@@ -1180,6 +1180,74 @@
             }
         }
 
+        /* Títulos verticales genéricos - igual que galería */
+        .seccion-vertical-wrap {
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+            min-height: 100%;
+        }
+        .seccion-titulos {
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+            flex-shrink: 0;
+            padding: 2rem 0 2rem 1.5rem;
+            gap: 0.5rem;
+        }
+        .seccion-titulo-v {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            font-family: 'Work Sans', sans-serif;
+            font-weight: 900;
+            text-transform: uppercase;
+            line-height: 0.9;
+            letter-spacing: -0.02em;
+            white-space: nowrap;
+            font-size: clamp(3rem, 8vw, 9rem);
+            flex-shrink: 0;
+        }
+        .seccion-subtitulo-v {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            font-family: 'Work Sans', sans-serif;
+            font-weight: 400;
+            font-style: italic;
+            line-height: 1;
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+            font-size: clamp(0.9rem, 1.8vw, 2rem);
+            flex-shrink: 0;
+            align-self: center;
+        }
+        .seccion-contenido-wrap {
+            flex: 1;
+            min-width: 0;
+        }
+        @media (max-width: 767px) {
+            .seccion-vertical-wrap {
+                flex-direction: column;
+            }
+            .seccion-titulos {
+                flex-direction: column;
+                writing-mode: horizontal-tb;
+                padding: 1.5rem 1rem 0.5rem 1rem;
+                gap: 0.25rem;
+            }
+            .seccion-titulo-v {
+                writing-mode: horizontal-tb;
+                transform: none;
+                font-size: clamp(2.5rem, 12vw, 4rem);
+            }
+            .seccion-subtitulo-v {
+                writing-mode: horizontal-tb;
+                transform: none;
+                font-size: 1rem;
+                align-self: auto;
+                margin-bottom: 0.5rem;
+            }
+        }
+
         @keyframes marquee-scroll {
             from { transform: translateX(0); }
             to { transform: translateX(-50%); }
@@ -1298,17 +1366,23 @@
 
     <!-- SECCIÓN 5: MAPA DE TERRITORIALIZACIÓN -->
     <section id="mapa" style="background-color: #2e1065;">
-        <div class="w-full">
-            <!-- Título + Buscador -->
-            <div class="max-w-7xl mx-auto px-4 pt-8 pb-2">
-                <h2 class="text-4xl md:text-6xl font-black text-white uppercase tracking-tight text-center mb-6">Mapeo de Organizaciones</h2>
-                <div class="relative max-w-xl mx-auto">
-                    <input type="text" id="map-search" placeholder="Buscar organización..." class="w-full px-5 py-3 rounded-full bg-white/10 text-white border border-white/20 focus:border-orange-400 focus:outline-none placeholder-white/50 text-sm backdrop-blur" autocomplete="off">
-                    <div id="map-search-results" class="absolute z-50 left-0 right-0 mt-1 bg-violet-950 rounded-xl shadow-2xl border border-white/15 hidden max-h-60 overflow-y-auto"></div>
-                </div>
+        <div class="seccion-vertical-wrap">
+            <!-- Título vertical -->
+            <div class="seccion-titulos">
+                <span class="seccion-titulo-v" style="color: #ffffff;">MAPEO</span>
+                <span class="seccion-subtitulo-v" style="color: rgba(255,255,255,0.5);">de Organizaciones</span>
             </div>
-            <!-- Layout sidebar + mapa -->
-            <div class="map-layout">
+            <!-- Contenido -->
+            <div class="seccion-contenido-wrap">
+                <!-- Buscador -->
+                <div class="max-w-7xl mx-auto px-4 pt-8 pb-2">
+                    <div class="relative max-w-xl mx-auto">
+                        <input type="text" id="map-search" placeholder="Buscar organización..." class="w-full px-5 py-3 rounded-full bg-white/10 text-white border border-white/20 focus:border-orange-400 focus:outline-none placeholder-white/50 text-sm backdrop-blur" autocomplete="off">
+                        <div id="map-search-results" class="absolute z-50 left-0 right-0 mt-1 bg-violet-950 rounded-xl shadow-2xl border border-white/15 hidden max-h-60 overflow-y-auto"></div>
+                    </div>
+                </div>
+                <!-- Layout sidebar + mapa -->
+                <div class="map-layout">
                 <!-- Sidebar de filtros -->
                 <div class="map-sidebar" id="map-filters">
                     <p class="sidebar-label text-white/40 text-xs uppercase tracking-widest mb-1">Filtrar</p>
@@ -1321,9 +1395,10 @@
                     <button class="filter-btn" data-sector="Multidisciplinar">Multidisciplinar</button>
                     <button class="filter-btn" data-sector="Circo social">Circo</button>
                 </div>
-                <!-- Mapa -->
-                <div class="map-main">
-                    <div id="map"></div>
+                    <!-- Mapa -->
+                    <div class="map-main">
+                        <div id="map"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1333,15 +1408,21 @@
 
     <!-- SECCIÓN 6: DIRECTORIO DE ORGANIZACIONES -->
     <section id="directorio" style="background-color: #9B1C31;" class="text-white">
-        <div class="max-w-7xl mx-auto">
-            <h2 class="text-4xl md:text-6xl font-black text-center mb-8 text-white uppercase tracking-tight">Directorio Vivo de Organizaciones</h2>
-            <!-- Buscador del directorio -->
-            <div class="relative max-w-xl mx-auto mb-4">
-                <input type="text" id="dir-search" placeholder="Buscar organización..." class="w-full px-5 py-3 rounded-full bg-white/10 text-white border border-white/20 focus:border-orange-400 focus:outline-none placeholder-white/50 text-sm backdrop-blur" autocomplete="off">
-                <div id="dir-search-results" class="absolute z-50 left-0 right-0 mt-1 bg-zinc-800 rounded-xl shadow-2xl border border-zinc-600 hidden max-h-60 overflow-y-auto"></div>
+        <div class="seccion-vertical-wrap">
+            <!-- Título vertical -->
+            <div class="seccion-titulos">
+                <span class="seccion-titulo-v" style="color: #ffffff;">DIRECTORIO</span>
+                <span class="seccion-subtitulo-v" style="color: rgba(255,255,255,0.5);">Vivo de Organizaciones</span>
             </div>
-            <!-- Layout sidebar + grid -->
-            <div class="dir-layout">
+            <!-- Contenido -->
+            <div class="seccion-contenido-wrap max-w-7xl mx-auto">
+                <!-- Buscador del directorio -->
+                <div class="relative max-w-xl mx-auto mb-4">
+                    <input type="text" id="dir-search" placeholder="Buscar organización..." class="w-full px-5 py-3 rounded-full bg-white/10 text-white border border-white/20 focus:border-orange-400 focus:outline-none placeholder-white/50 text-sm backdrop-blur" autocomplete="off">
+                    <div id="dir-search-results" class="absolute z-50 left-0 right-0 mt-1 bg-zinc-800 rounded-xl shadow-2xl border border-zinc-600 hidden max-h-60 overflow-y-auto"></div>
+                </div>
+                <!-- Layout sidebar + grid -->
+                <div class="dir-layout">
                 <!-- Sidebar de filtros -->
                 <div class="dir-sidebar" id="dir-filters">
                     <p class="sidebar-label text-white/40 text-xs uppercase tracking-widest mb-1">Filtrar</p>
@@ -1362,6 +1443,7 @@
                 </div>
             </div>
         </div>
+    </div>
     </section>
 
     <!-- Divider: Directorio → Envolvente -->
@@ -1374,9 +1456,16 @@
 
     <!-- SECCIÓN 9: TRASCENDER -->
     <section id="envolvente" class="bg-gradient-to-r from-indigo-600 to-purple-700 text-white">
-        <div class="max-w-4xl mx-auto">
-            <h2 class="text-4xl md:text-5xl font-bold text-center mb-2">TRASCENDER <span class="text-sm font-light tracking-widest text-white/50 uppercase align-middle">prototipo</span></h2>
-            <p class="text-center text-white/60 italic mb-10 text-base">"Formando Gigantes" — Una iniciativa que nace desde la esencia de la red</p>
+        <div class="seccion-vertical-wrap">
+            <!-- Título vertical -->
+            <div class="seccion-titulos">
+                <span class="seccion-titulo-v" style="color: #ffffff;">TRASCENDER</span>
+                <span class="seccion-subtitulo-v" style="color: rgba(255,255,255,0.5);">prototipo</span>
+            </div>
+            <!-- Contenido -->
+            <div class="seccion-contenido-wrap">
+                <div class="max-w-4xl mx-auto">
+                    <p class="text-center text-white/60 italic mb-10 text-base pt-8">"Formando Gigantes" — Una iniciativa que nace desde la esencia de la red</p>
             <div class="bg-white/10 backdrop-blur rounded-2xl p-8 md:p-12">
                 <h3 class="text-2xl font-bold mb-2">Un espacio más allá de lo teórico</h3>
                 <p class="text-white/70 mb-8 text-sm leading-relaxed">
@@ -1422,6 +1511,8 @@
                 </div>
                 <p class="text-center text-white/30 text-xs mt-10 italic">* Contenido provisional — en construcción con el equipo TRASCENDER</p>
             </div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -1464,7 +1555,7 @@
             <!-- Créditos -->
             <div class="border-t border-white/10 pt-6 text-center">
                 <div class="flex flex-col md:flex-row justify-center items-center gap-3 mb-4 text-sm text-white/60">
-                    <p><strong class="text-white/80">Orientación Estratégica:</strong> Jamie Ruiz</p>
+                    <p><strong class="text-white/80">Orientación Estratégica:</strong> Jeimmy Ruiz Cardenas</p>
                     <span class="hidden md:inline text-white/20">|</span>
                     <p><strong class="text-white/80">Realización Gráfica y Audiovisual:</strong> Felipe Camacho Otero</p>
                 </div>
