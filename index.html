@@ -2188,36 +2188,52 @@
         function loadGallery() {
             const grid = document.getElementById('gallery-grid');
             const albums = getAlbums();
-            const albumKeys = Object.keys(albums);
             const isMobile = window.innerWidth < 768;
 
-            // Evitar reconstruir si el modo no cambió
             const mode = isMobile ? 'mobile' : 'desktop';
             if (mode === lastGalleryMode) return;
             lastGalleryMode = mode;
 
-            // Si no hay fotos aún, mostrar placeholder por cada organización
-            const usePlaceholders = albumKeys.length === 0;
-            const allItems = usePlaceholders
-                ? organizaciones.map(org => ({ key: `ph-${org.id}`, name: org.nombre, isPlaceholder: true }))
-                : albumKeys.map(k => ({ key: k, name: albums[k].name, isPlaceholder: false }));
+            // Mapeo org.id → clave de álbum (orgs que ya tienen fotos)
+            const orgAlbumMap = {
+                4:  'CODIGO_ESTILO_CREW_2025',
+                5:  'THE_GIANT_CORPORATION_2025',
+                7:  'ELEMENTS_2025',
+                20: 'INFLUENCERS_ETNICOS_2025',
+                25: 'RED_CEPELA_2025',
+                26: 'ALTERNATIVO_2025',
+                28: 'GUAQUE_SOPO_2025'
+            };
 
-            // Construir filas según tamaño de pantalla
+            // Las 32 orgs como base (con datos reales si existen)
+            const allItems = organizaciones.map(org => {
+                const albumKey = orgAlbumMap[org.id];
+                if (albumKey && albums[albumKey]) {
+                    return { key: albumKey, name: albums[albumKey].name, album: albums[albumKey], isPlaceholder: false };
+                }
+                return { key: `ph-${org.id}`, name: org.nombre, isPlaceholder: true };
+            });
+
+            // Álbumes de eventos sin org asignada (CUMBRE, MALOKA, etc.) al final
+            const mappedKeys = new Set(Object.values(orgAlbumMap));
+            Object.keys(albums).forEach(k => {
+                if (!mappedKeys.has(k)) {
+                    allItems.push({ key: k, name: albums[k].name, album: albums[k], isPlaceholder: false });
+                }
+            });
+
+            // Construir filas
             const rows = [];
             let i = 0;
-
             if (isMobile) {
-                // Móvil: filas de 2 con offset alterno
                 while (i < allItems.length) {
                     rows.push(allItems.slice(i, i + 2));
                     i += 2;
                 }
             } else {
-                // Desktop: filas de 5 y 4 alternadas para cubrir el ancho
-                const colsA = 5, colsB = 4;
                 let isOddRow = true;
                 while (i < allItems.length) {
-                    const rowSize = isOddRow ? colsA : colsB;
+                    const rowSize = isOddRow ? 5 : 4;
                     rows.push(allItems.slice(i, i + rowSize));
                     i += rowSize;
                     isOddRow = !isOddRow;
@@ -2243,16 +2259,15 @@
                             </div>
                         </div>`;
                     } else {
-                        const album = albums[item.key];
-                        const coverPhoto = album.photos[0];
+                        const coverPhoto = item.album.photos[0];
                         html = `
                         <div class="hex-wrap">
                             <div class="album-card" onclick="openAlbum('${item.key}')" id="album-${idx}">
                                 <div class="album-bg" style="background-image: url('${coverPhoto}'); opacity: 1;" data-album-key="${item.key}"></div>
                                 <div class="album-overlay"></div>
                                 <div class="album-info">
-                                    <h3>${album.name}</h3>
-                                    <p>📷 ${album.photos.length} fotos</p>
+                                    <h3>${item.name}</h3>
+                                    <p>📷 ${item.album.photos.length} fotos</p>
                                 </div>
                             </div>
                         </div>`;
@@ -2264,11 +2279,8 @@
                 return `<div class="hex-row${offsetClass}">${rowHtml}</div>`;
             }).join('');
 
-            // Aplicar formas de jaguar únicas y variación de tamaño a cada portada
             applyJaguarSpots();
-
-            // Iniciar slideshows solo si hay fotos reales
-            if (!usePlaceholders) startAlbumCoverSlideshows(albums);
+            startAlbumCoverSlideshows(albums);
         }
 
         // ========== GENERADOR FRACTAL DE MANCHAS DE JAGUAR ==========
