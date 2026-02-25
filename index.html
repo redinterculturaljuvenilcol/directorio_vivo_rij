@@ -660,9 +660,27 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1rem;
+            max-width: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0 0.5rem;
+        }
+
+        /* Placeholder mancha-album sin imagen */
+        .album-placeholder {
+            background: linear-gradient(135deg, #7a1426 0%, #9B1C31 50%, #5a0f1c 100%);
+            cursor: default !important;
+        }
+        .album-placeholder:hover {
+            transform: scale(1.04) !important;
+            filter: brightness(1.05) !important;
+        }
+        .album-placeholder .album-overlay {
+            background: radial-gradient(ellipse at center, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.05) 70%);
+        }
+        .album-placeholder .placeholder-label {
+            opacity: 0.6;
+            font-size: 0.7rem !important;
         }
 
         .hex-row {
@@ -1117,7 +1135,8 @@
         .galeria-titulos {
             display: flex;
             flex-direction: row;
-            align-items: stretch;
+            align-items: flex-start;
+            align-self: flex-start;
             flex-shrink: 0;
             padding: 2rem 0 2rem 1.5rem;
             gap: 0.5rem;
@@ -2171,65 +2190,84 @@
             const albums = getAlbums();
             const albumKeys = Object.keys(albums);
             const isMobile = window.innerWidth < 768;
-            
+
             // Evitar reconstruir si el modo no cambió
             const mode = isMobile ? 'mobile' : 'desktop';
             if (mode === lastGalleryMode) return;
             lastGalleryMode = mode;
-            
+
+            // Si no hay fotos aún, mostrar placeholder por cada organización
+            const usePlaceholders = albumKeys.length === 0;
+            const allItems = usePlaceholders
+                ? organizaciones.map(org => ({ key: `ph-${org.id}`, name: org.nombre, isPlaceholder: true }))
+                : albumKeys.map(k => ({ key: k, name: albums[k].name, isPlaceholder: false }));
+
             // Construir filas según tamaño de pantalla
             const rows = [];
             let i = 0;
-            
+
             if (isMobile) {
-                // Móvil: todas las filas de 2, con offset alterno para honeycomb
-                while (i < albumKeys.length) {
-                    rows.push(albumKeys.slice(i, i + 2));
+                // Móvil: filas de 2 con offset alterno
+                while (i < allItems.length) {
+                    rows.push(allItems.slice(i, i + 2));
                     i += 2;
                 }
             } else {
-                // Desktop: filas impares = 3, pares = 2
-                const cols = 3;
+                // Desktop: filas de 5 y 4 alternadas para cubrir el ancho
+                const colsA = 5, colsB = 4;
                 let isOddRow = true;
-                while (i < albumKeys.length) {
-                    const rowSize = isOddRow ? cols : Math.max(cols - 1, 1);
-                    rows.push(albumKeys.slice(i, i + rowSize));
+                while (i < allItems.length) {
+                    const rowSize = isOddRow ? colsA : colsB;
+                    rows.push(allItems.slice(i, i + rowSize));
                     i += rowSize;
                     isOddRow = !isOddRow;
                 }
             }
-            
+
             grid.className = 'honeycomb';
-            
+
             let idx = 0;
             grid.innerHTML = rows.map((row, rowIndex) => {
-                const items = row.map(key => {
-                    const album = albums[key];
-                    const coverPhoto = album.photos[0];
-                    const html = `
+                const rowHtml = row.map(item => {
+                    let html;
+                    if (item.isPlaceholder) {
+                        html = `
                         <div class="hex-wrap">
-                            <div class="album-card" onclick="openAlbum('${key}')" id="album-${idx}">
-                                <div class="album-bg" style="background-image: url('${coverPhoto}'); opacity: 1;" data-album-key="${key}"></div>
+                            <div class="album-card album-placeholder" id="album-${idx}">
+                                <div class="album-overlay"></div>
+                                <div class="album-info">
+                                    <h3>${item.name}</h3>
+                                    <p class="placeholder-label">📷 Próximamente</p>
+                                </div>
+                            </div>
+                        </div>`;
+                    } else {
+                        const album = albums[item.key];
+                        const coverPhoto = album.photos[0];
+                        html = `
+                        <div class="hex-wrap">
+                            <div class="album-card" onclick="openAlbum('${item.key}')" id="album-${idx}">
+                                <div class="album-bg" style="background-image: url('${coverPhoto}'); opacity: 1;" data-album-key="${item.key}"></div>
                                 <div class="album-overlay"></div>
                                 <div class="album-info">
                                     <h3>${album.name}</h3>
                                     <p>📷 ${album.photos.length} fotos</p>
                                 </div>
                             </div>
-                        </div>
-                    `;
+                        </div>`;
+                    }
                     idx++;
                     return html;
                 }).join('');
                 const offsetClass = (isMobile && rowIndex % 2 === 1) ? ' hex-row-offset' : '';
-                return `<div class="hex-row${offsetClass}">${items}</div>`;
+                return `<div class="hex-row${offsetClass}">${rowHtml}</div>`;
             }).join('');
-            
+
             // Aplicar formas de jaguar únicas y variación de tamaño a cada portada
             applyJaguarSpots();
-            
-            // Iniciar slideshows en portadas de álbumes
-            startAlbumCoverSlideshows(albums);
+
+            // Iniciar slideshows solo si hay fotos reales
+            if (!usePlaceholders) startAlbumCoverSlideshows(albums);
         }
 
         // ========== GENERADOR FRACTAL DE MANCHAS DE JAGUAR ==========
