@@ -657,7 +657,7 @@ const organizaciones = [
         instagram: "https://www.instagram.com/medance_md/",
         facebook: "https://www.facebook.com/MedanceMedellin/",
         youtube: "https://www.youtube.com/@medancemd325",
-        logo: "",
+        logo: "assets/logos_orgs/PNG/logo_medance.png",
         lat: 6.2267,
         lng: -75.5935
     },
@@ -677,7 +677,7 @@ const organizaciones = [
         sectores: ["Sonoro", "Letras", "Multidisciplinar"],
         poblacion: ["Indígenas", "Mestizos", "Campesino"],
         instagram: "https://www.instagram.com/jenayeng_vidaor/",
-        logo: "",
+        logo: "assets/logos_orgs/PNG/jenayeng_vida_ora.png",
         lat: 1.2019,
         lng: -76.9196
     },
