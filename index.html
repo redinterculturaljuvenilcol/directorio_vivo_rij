@@ -2035,19 +2035,34 @@
         let currentMapSearch = '';
 
         function initMap() {
+            const isMobile = window.innerWidth < 768;
             const defaultCenter = [4.0, -72.0];
-            const defaultZoom = 5;
+            const defaultZoom = isMobile ? 4 : 5;
             const map = L.map('map', {
-                dragging: false,
-                touchZoom: false,
+                dragging: isMobile,
+                touchZoom: isMobile,
                 scrollWheelZoom: false,
                 doubleClickZoom: false,
                 boxZoom: false,
                 keyboard: false,
-                zoomControl: false,
+                zoomControl: isMobile,
                 zoomSnap: 0.5,
                 zoomDelta: 0.5
             }).setView(defaultCenter, defaultZoom);
+
+            // En móvil: arrastre solo con dos dedos (evita scroll accidental)
+            if (isMobile && map.dragging) {
+                map.dragging.disable();
+                map.on('touchstart', function(e) {
+                    if (e.originalEvent.touches.length >= 2) {
+                        map.dragging.enable();
+                    }
+                });
+                map.on('touchend', function() {
+                    map.dragging.disable();
+                });
+            }
+
             window.mapInstance = map;
             window.mapDefaultCenter = defaultCenter;
             window.mapDefaultZoom = defaultZoom;
