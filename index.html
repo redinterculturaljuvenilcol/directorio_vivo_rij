@@ -2848,14 +2848,36 @@
         function initLogosMarquee() {
             const track = document.getElementById('marquee-track');
             if (!track) return;
+            const normalizeUrl = (value) => {
+                if (!value || typeof value !== 'string') return null;
+                const trimmed = value.trim();
+                if (!trimmed) return null;
+                if (/^https?:\/\//i.test(trimmed)) return trimmed;
+                if (/^www\./i.test(trimmed)) return 'https://' + trimmed;
+                return null;
+            };
+            const getOrgPrimaryUrl = (org) => {
+                return normalizeUrl(org.web)
+                    || normalizeUrl(org.instagram)
+                    || normalizeUrl(org.facebook)
+                    || normalizeUrl(org.youtube);
+            };
             // Recoger logos de organizaciones que tengan logo
             const logos = organizaciones.filter(o => o.logo && o.logo.length > 0).map(o => {
                 const isAlternativo = o.nombre === 'Alternativo';
                 const extraStyle = isAlternativo ? ' style="height:90px;max-width:200px;"' : '';
-                return '<img src="' + o.logo + '" alt="' + o.nombre + '" title="' + o.nombre + '" loading="lazy"' + extraStyle + '>';
+                const img = '<img src="' + o.logo + '" alt="' + o.nombre + '" title="' + o.nombre + '" loading="lazy"' + extraStyle + '>';
+                const href = getOrgPrimaryUrl(o);
+                if (!href) return img;
+                return '<a href="' + href + '" target="_blank" rel="noopener noreferrer" aria-label="Ir al perfil de ' + o.nombre + '">' + img + '</a>';
             });
+            const logosInstitucionales = [
+                '<a href="https://artesparalapaz.mincultura.gov.co/Paginas/index.aspx" target="_blank" rel="noopener noreferrer" aria-label="Ir a Artes para la Paz"><img src="assets/logos_orgs/MC__ID_Artes%20para%20la%20paz_General_Blanco.png" alt="Artes para la Paz" title="Artes para la Paz" loading="lazy"></a>',
+                '<a href="https://www.mincultura.gov.co/Paginas/default.aspx" target="_blank" rel="noopener noreferrer" aria-label="Ir al Ministerio de las Culturas"><img src="assets/logos_orgs/BLANCOCULTURAS.png" alt="Culturas" title="Culturas" loading="lazy"></a>'
+            ];
             // Duplicar para loop continuo
-            const allLogos = logos.join('') + logos.join('');
+            const logosFinales = logos.concat(logosInstitucionales);
+            const allLogos = logosFinales.join('') + logosFinales.join('');
             track.innerHTML = allLogos;
         }
 
