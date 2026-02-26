@@ -660,9 +660,27 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1rem;
+            max-width: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0 0.5rem;
+        }
+
+        /* Placeholder mancha-album sin imagen */
+        .album-placeholder {
+            background: linear-gradient(135deg, #7a1426 0%, #9B1C31 50%, #5a0f1c 100%);
+            cursor: default !important;
+        }
+        .album-placeholder:hover {
+            transform: scale(1.04) !important;
+            filter: brightness(1.05) !important;
+        }
+        .album-placeholder .album-overlay {
+            background: radial-gradient(ellipse at center, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.05) 70%);
+        }
+        .album-placeholder .placeholder-label {
+            opacity: 0.6;
+            font-size: 0.7rem !important;
         }
 
         .hex-row {
@@ -1117,7 +1135,8 @@
         .galeria-titulos {
             display: flex;
             flex-direction: row;
-            align-items: stretch;
+            align-items: flex-start;
+            align-self: flex-start;
             flex-shrink: 0;
             padding: 2rem 0 2rem 1.5rem;
             gap: 0.5rem;
@@ -1152,7 +1171,8 @@
         .galeria-grid-wrap {
             flex: 1;
             min-width: 0;
-            padding: 2rem 1rem 2rem 0;
+            padding: 2rem 0.5rem 2rem 0;
+            width: 100%;
         }
         @media (max-width: 767px) {
             .galeria-titulos {
@@ -1190,7 +1210,8 @@
         .seccion-titulos {
             display: flex;
             flex-direction: row;
-            align-items: stretch;
+            align-items: flex-start;
+            align-self: flex-start;
             flex-shrink: 0;
             padding: 2rem 0 2rem 1.5rem;
             gap: 0.5rem;
@@ -1330,8 +1351,8 @@
     </div>
 
     <!-- SECCIÓN 3: GALERÍA -->
-    <section id="galeria" class="overflow-hidden" style="background-color: #facc15;">
-        <div class="galeria-vertical-wrap max-w-screen-2xl mx-auto">
+    <section id="galeria" class="overflow-hidden" style="background-color: #facc15; background-image: url('assets/backgrownd/piel_galeria.jpeg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+        <div class="galeria-vertical-wrap">
             <!-- Títulos verticales -->
             <div class="galeria-titulos">
                 <span class="galeria-titulo-v">Galería</span>
@@ -1555,7 +1576,7 @@
             <!-- Créditos -->
             <div class="border-t border-white/10 pt-6 text-center">
                 <div class="flex flex-col md:flex-row justify-center items-center gap-3 mb-4 text-sm text-white/60">
-                    <p><strong class="text-white/80">Orientación Estratégica:</strong> Jamie Ruiz</p>
+                    <p><strong class="text-white/80">Orientación Estratégica:</strong> Jeimmy Ruiz Cardenas</p>
                     <span class="hidden md:inline text-white/20">|</span>
                     <p><strong class="text-white/80">Realización Gráfica y Audiovisual:</strong> Felipe Camacho Otero</p>
                 </div>
@@ -1568,8 +1589,75 @@
     </footer>
 
     <script>
-        // Array de fotos de organizaciones (123 fotos totales)
+        // Array de fotos de organizaciones (205 fotos totales)
         const fotosOrgs = [
+            'assets/photos_orgs/01_CORPORACION_YUKUTA_.jpg',
+            'assets/photos_orgs/02_CORPORACION_YUKUTA_.jpg',
+            'assets/photos_orgs/03_CORPORACION_YUKUTA_.jpg',
+            'assets/photos_orgs/04_CORPORACION_YUKUTA_.jpg',
+            'assets/photos_orgs/05_CORPORACION_YUKUTA_.jpg',
+            'assets/photos_orgs/06_CORPORACION_YUKUTA_.jpg',
+            'assets/photos_orgs/07_CORPORACION_YUKUTA_.jpg',
+            'assets/photos_orgs/08_CORPORACION_YUKUTA_.jpg',
+            'assets/photos_orgs/09_CORPORACION_YUKUTA_.jpg',
+            'assets/photos_orgs/10_CORPORACION_YUKUTA_.jpg',
+            'assets/photos_orgs/11_CORPORACION_YUKUTA_.jpg',
+            'assets/photos_orgs/12_CORPORACION_YUKUTA_.jpg',
+            'assets/photos_orgs/13_CORPORACION_YUKUTA_.jpg',
+            'assets/photos_orgs/14_CORPORACION_YUKUTA_.jpg',
+            'assets/photos_orgs/15_CORPORACION_YUKUTA_.jpg',
+            'assets/photos_orgs/16_CORPORACION_YUKUTA_.jpg',
+            'assets/photos_orgs/17_CORPORACION_YUKUTA_.jpg',
+            'assets/photos_orgs/01_AMBIENTALISTAS_DE_CORAZON_451.jpg',
+            'assets/photos_orgs/02_AMBIENTALISTAS_DE_CORAZON_451.jpg',
+            'assets/photos_orgs/03_AMBIENTALISTAS_DE_CORAZON_451.jpg',
+            'assets/photos_orgs/04_AMBIENTALISTAS_DE_CORAZON_451.jpg',
+            'assets/photos_orgs/05_AMBIENTALISTAS_DE_CORAZON_451.jpg',
+            'assets/photos_orgs/06_AMBIENTALISTAS_DE_CORAZON_451.jpg',
+            'assets/photos_orgs/07_AMBIENTALISTAS_DE_CORAZON_451.jpg',
+            'assets/photos_orgs/08_AMBIENTALISTAS_DE_CORAZON_451.jpg',
+            'assets/photos_orgs/09_AMBIENTALISTAS_DE_CORAZON_451.jpg',
+            'assets/photos_orgs/10_AMBIENTALISTAS_DE_CORAZON_451.jpg',
+            'assets/photos_orgs/11_AMBIENTALISTAS_DE_CORAZON_451.jpg',
+            'assets/photos_orgs/12_AMBIENTALISTAS_DE_CORAZON_451.jpg',
+            'assets/photos_orgs/13_AMBIENTALISTAS_DE_CORAZON_451.jpg',
+            'assets/photos_orgs/14_AMBIENTALISTAS_DE_CORAZON_451.jpg',
+            'assets/photos_orgs/15_AMBIENTALISTAS_DE_CORAZON_451.jpg',
+            'assets/photos_orgs/16_AMBIENTALISTAS_DE_CORAZON_451.jpg',
+            'assets/photos_orgs/17_AMBIENTALISTAS_DE_CORAZON_451.jpg',
+            'assets/photos_orgs/18_AMBIENTALISTAS_DE_CORAZON_451.jpg',
+            'assets/photos_orgs/19_AMBIENTALISTAS_DE_CORAZON_451.jpg',
+            'assets/photos_orgs/20_AMBIENTALISTAS_DE_CORAZON_451.jpg',
+            'assets/photos_orgs/01_ARTE_SHEMBASEG.jpg',
+            'assets/photos_orgs/02_ARTE_SHEMBASEG.jpg',
+            'assets/photos_orgs/03_ARTE_SHEMBASEG.jpg',
+            'assets/photos_orgs/04_ARTE_SHEMBASEG.jpg',
+            'assets/photos_orgs/05_ARTE_SHEMBASEG.jpg',
+            'assets/photos_orgs/06_ARTE_SHEMBASEG.jpg',
+            'assets/photos_orgs/07_ARTE_SHEMBASEG.jpg',
+            'assets/photos_orgs/08_ARTE_SHEMBASEG.jpg',
+            'assets/photos_orgs/09_ARTE_SHEMBASEG.jpg',
+            'assets/photos_orgs/10_ARTE_SHEMBASEG.jpg',
+            'assets/photos_orgs/11_ARTE_SHEMBASEG.jpg',
+            'assets/photos_orgs/12_ARTE_SHEMBASEG.jpg',
+            'assets/photos_orgs/13_ARTE_SHEMBASEG.jpg',
+            'assets/photos_orgs/01_TEATRO_FAHRENHEIT_451.jpg',
+            'assets/photos_orgs/02_TEATRO_FAHRENHEIT_451.jpg',
+            'assets/photos_orgs/03_TEATRO_FAHRENHEIT_451.jpg',
+            'assets/photos_orgs/04_TEATRO_FAHRENHEIT_451.jpg',
+            'assets/photos_orgs/05_TEATRO_FAHRENHEIT_451.jpg',
+            'assets/photos_orgs/06_TEATRO_FAHRENHEIT_451.jpg',
+            'assets/photos_orgs/07_TEATRO_FAHRENHEIT_451.jpg',
+            'assets/photos_orgs/08_TEATRO_FAHRENHEIT_451.jpg',
+            'assets/photos_orgs/09_TEATRO_FAHRENHEIT_451.jpg',
+            'assets/photos_orgs/10_TEATRO_FAHRENHEIT_451.jpg',
+            'assets/photos_orgs/11_TEATRO_FAHRENHEIT_451.jpg',
+            'assets/photos_orgs/12_TEATRO_FAHRENHEIT_451.jpg',
+            'assets/photos_orgs/13_TEATRO_FAHRENHEIT_451.jpg',
+            'assets/photos_orgs/14_TEATRO_FAHRENHEIT_451.jpg',
+            'assets/photos_orgs/15_TEATRO_FAHRENHEIT_451.jpg',
+            'assets/photos_orgs/16_TEATRO_FAHRENHEIT_451.jpg',
+            'assets/photos_orgs/17_TEATRO_FAHRENHEIT_451.jpg',
             'assets/photos_orgs/01_CODIGO_ESTILO_CREW_2025.jpg',
             'assets/photos_orgs/01_CUMBRE_CASA_CULTURAL.jpg',
             'assets/photos_orgs/01_MALOKA_JOVEN_2025.jpg',
@@ -2129,6 +2217,10 @@
         function getAlbums() {
             const albums = {};
             const albumNames = {
+                'CORPORACION_YUKUTA_': 'Corporación Yukuta',
+                'AMBIENTALISTAS_DE_CORAZON_451': 'Ambientalistas de Corazón',
+                'ARTE_SHEMBASEG': 'Minga Muralista Kamentsa',
+                'TEATRO_FAHRENHEIT_451': 'Teatro Fahrenheit 451',
                 'CODIGO_ESTILO_CREW_2025': 'Código Estilo Crew 2025',
                 'CUMBRE_CASA_CULTURAL': 'Cumbre Casa Cultural',
                 'MALOKA_JOVEN_2025': 'Maloka Joven 2025',
@@ -2168,66 +2260,103 @@
         function loadGallery() {
             const grid = document.getElementById('gallery-grid');
             const albums = getAlbums();
-            const albumKeys = Object.keys(albums);
             const isMobile = window.innerWidth < 768;
-            
-            // Evitar reconstruir si el modo no cambió
+
             const mode = isMobile ? 'mobile' : 'desktop';
             if (mode === lastGalleryMode) return;
             lastGalleryMode = mode;
-            
-            // Construir filas según tamaño de pantalla
+
+            // Mapeo org.id → clave de álbum (orgs que ya tienen fotos)
+            const orgAlbumMap = {
+                1:  'CORPORACION_YUKUTA_',
+                2:  'TEATRO_FAHRENHEIT_451',
+                4:  'CODIGO_ESTILO_CREW_2025',
+                6:  'ARTE_SHEMBASEG',
+                16: 'AMBIENTALISTAS_DE_CORAZON_451',
+                5:  'THE_GIANT_CORPORATION_2025',
+                7:  'ELEMENTS_2025',
+                19: 'MALOKA_JOVEN_2025',
+                20: 'INFLUENCERS_ETNICOS_2025',
+                25: 'RED_CEPELA_2025',
+                26: 'ALTERNATIVO_2025',
+                28: 'GUAQUE_SOPO_2025'
+            };
+
+            // Las 32 orgs como base (con datos reales si existen)
+            const allItems = organizaciones.map(org => {
+                const albumKey = orgAlbumMap[org.id];
+                if (albumKey && albums[albumKey]) {
+                    return { key: albumKey, name: albums[albumKey].name, album: albums[albumKey], isPlaceholder: false };
+                }
+                return { key: `ph-${org.id}`, name: org.nombre, isPlaceholder: true };
+            });
+
+            // Álbumes de eventos sin org asignada (CUMBRE, MALOKA, etc.) al final
+            const mappedKeys = new Set(Object.values(orgAlbumMap));
+            Object.keys(albums).forEach(k => {
+                if (!mappedKeys.has(k)) {
+                    allItems.push({ key: k, name: albums[k].name, album: albums[k], isPlaceholder: false });
+                }
+            });
+
+            // Construir filas
             const rows = [];
             let i = 0;
-            
             if (isMobile) {
-                // Móvil: todas las filas de 2, con offset alterno para honeycomb
-                while (i < albumKeys.length) {
-                    rows.push(albumKeys.slice(i, i + 2));
+                while (i < allItems.length) {
+                    rows.push(allItems.slice(i, i + 2));
                     i += 2;
                 }
             } else {
-                // Desktop: filas impares = 3, pares = 2
-                const cols = 3;
                 let isOddRow = true;
-                while (i < albumKeys.length) {
-                    const rowSize = isOddRow ? cols : Math.max(cols - 1, 1);
-                    rows.push(albumKeys.slice(i, i + rowSize));
+                while (i < allItems.length) {
+                    const rowSize = isOddRow ? 5 : 4;
+                    rows.push(allItems.slice(i, i + rowSize));
                     i += rowSize;
                     isOddRow = !isOddRow;
                 }
             }
-            
+
             grid.className = 'honeycomb';
-            
+
             let idx = 0;
             grid.innerHTML = rows.map((row, rowIndex) => {
-                const items = row.map(key => {
-                    const album = albums[key];
-                    const coverPhoto = album.photos[0];
-                    const html = `
+                const rowHtml = row.map(item => {
+                    let html;
+                    if (item.isPlaceholder) {
+                        html = `
                         <div class="hex-wrap">
-                            <div class="album-card" onclick="openAlbum('${key}')" id="album-${idx}">
-                                <div class="album-bg" style="background-image: url('${coverPhoto}'); opacity: 1;" data-album-key="${key}"></div>
+                            <div class="album-card album-placeholder" id="album-${idx}">
+                                <div class="album-bg" style="background-image: url('assets/backgrownd/04_Jaguar%20rojo%201.jpg'); opacity: 1;"></div>
                                 <div class="album-overlay"></div>
                                 <div class="album-info">
-                                    <h3>${album.name}</h3>
-                                    <p>📷 ${album.photos.length} fotos</p>
+                                    <h3>${item.name}</h3>
+                                    <p class="placeholder-label">📷 Próximamente</p>
                                 </div>
                             </div>
-                        </div>
-                    `;
+                        </div>`;
+                    } else {
+                        const coverPhoto = item.album.photos[0];
+                        html = `
+                        <div class="hex-wrap">
+                            <div class="album-card" onclick="openAlbum('${item.key}')" id="album-${idx}">
+                                <div class="album-bg" style="background-image: url('${coverPhoto}'); opacity: 1;" data-album-key="${item.key}"></div>
+                                <div class="album-overlay"></div>
+                                <div class="album-info">
+                                    <h3>${item.name}</h3>
+                                    <p>📷 ${item.album.photos.length} fotos</p>
+                                </div>
+                            </div>
+                        </div>`;
+                    }
                     idx++;
                     return html;
                 }).join('');
                 const offsetClass = (isMobile && rowIndex % 2 === 1) ? ' hex-row-offset' : '';
-                return `<div class="hex-row${offsetClass}">${items}</div>`;
+                return `<div class="hex-row${offsetClass}">${rowHtml}</div>`;
             }).join('');
-            
-            // Aplicar formas de jaguar únicas y variación de tamaño a cada portada
+
             applyJaguarSpots();
-            
-            // Iniciar slideshows en portadas de álbumes
             startAlbumCoverSlideshows(albums);
         }
 
