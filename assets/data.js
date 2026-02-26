@@ -699,7 +699,7 @@ const organizaciones = [
         web: "https://labellecera.com",
         instagram: "https://www.instagram.com/labellecera",
         facebook: "https://www.facebook.com/labellecera",
-        logo: "",
+        logo: "assets/logos_orgs/PNG/logo_la_bellecera.png",
         lat: 6.9879,
         lng: -73.0537
     }
