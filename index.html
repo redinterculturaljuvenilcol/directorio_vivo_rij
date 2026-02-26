@@ -40,6 +40,7 @@
             align-items: center;
             justify-content: center;
             background: #000;
+            isolation: isolate;
             transition: opacity 0.6s ease;
         }
         #preloader.hide {
@@ -65,7 +66,12 @@
             width: 240px;
             height: 240px;
             object-fit: contain;
+            background: transparent;
             filter: drop-shadow(0 0 30px rgba(0,0,0,0.7));
+        }
+        #preloader-video.preloader-video-fallback {
+            mix-blend-mode: screen;
+            opacity: 0.96;
         }
         @media (min-width: 768px) {
             #preloader-video {
@@ -1318,8 +1324,9 @@
     <div id="preloader">
         <div id="preloader-bg"></div>
         <div id="preloader-overlay"></div>
-        <video id="preloader-video" autoplay loop muted playsinline>
-            <source src="assets/preload/reloj_jaguar.webm" type="video/webm">
+        <video id="preloader-video" autoplay loop muted playsinline webkit-playsinline preload="metadata" aria-label="Animación de carga">
+            <source src="assets/preload/reloj_jaguar.mov" type='video/quicktime; codecs="hvc1"'>
+            <source src="assets/preload/reloj_jaguar.webm" type='video/webm; codecs="vp9"'>
         </video>
     </div>
 
@@ -2906,6 +2913,7 @@
         (function() {
             const preloader = document.getElementById('preloader');
             const preloaderBg = document.getElementById('preloader-bg');
+            const preloaderVideo = document.getElementById('preloader-video');
             const bgImages = [
                 'assets/backgrownd/01_MAPA_JAGUAR 2.jpg',
                 'assets/backgrownd/02_selva.jpg',
@@ -2913,6 +2921,24 @@
                 'assets/backgrownd/04_Jaguar rojo 1.jpg',
                 'assets/backgrownd/05_Lomo IMPASTO.jpg'
             ];
+
+            if (preloaderVideo) {
+                preloaderVideo.addEventListener('loadeddata', function() {
+                    preloaderVideo.classList.remove('preloader-video-fallback');
+                }, { once: true });
+
+                preloaderVideo.addEventListener('error', function() {
+                    preloaderVideo.classList.add('preloader-video-fallback');
+                }, { once: true });
+
+                const playPromise = preloaderVideo.play();
+                if (playPromise && typeof playPromise.catch === 'function') {
+                    playPromise.catch(function() {
+                        preloaderVideo.classList.add('preloader-video-fallback');
+                    });
+                }
+            }
+
             let bgIndex = 0;
 
             // Set first background immediately
