@@ -1,0 +1,4 @@
+From https://github.com/redinterculturaljuvenilcol/directorio_vivo_rij
+ * branch            main       -> FETCH_HEAD
+error: cannot lock ref 'refs/remotes/origin/main': is at 34e6dcd8b4895da9b73a9f78461ddb115e23f525 but expected c866e60f8546032b5859aeaa539de5b859b8e522
+ ! c866e60..34e6dcd  main       -> origin/main  (unable to update local ref)
