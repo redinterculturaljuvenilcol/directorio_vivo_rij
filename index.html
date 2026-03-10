@@ -10,7 +10,8 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
     <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
-    <script src="assets/data.js?v=20260226c"></script>
+    <script src="assets/data.js?v=20260218b"></script>
+    <script src="assets/photos_orgs_manifest.js?v=20260310a"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;800;900&display=swap');
         
@@ -1647,8 +1648,8 @@
     </footer>
 
     <script>
-        // Array de fotos de organizaciones (205 fotos totales)
-        const fotosOrgs = [
+        // Array fallback de fotos; se sobreescribe con el manifiesto si existe
+        let fotosOrgs = [
             'assets/photos_orgs/01_CORPORACION_YUKUTA_.jpg',
             'assets/photos_orgs/02_CORPORACION_YUKUTA_.jpg',
             'assets/photos_orgs/03_CORPORACION_YUKUTA_.jpg',
@@ -1856,6 +1857,162 @@
             'assets/photos_orgs/15_ALTERNATIVO_2025.jpg'
         ];
 
+        if (Array.isArray(window.fotosOrgsManifest) && window.fotosOrgsManifest.length) {
+            fotosOrgs = [...window.fotosOrgsManifest];
+        }
+
+        const ORG_ALBUM_ALIASES = {
+            1: 'CORPORACION_YUKUTA_',
+            2: 'TEATRO_FAHRENHEIT_451',
+            3: 'ODEC',
+            4: 'CODIGO_ESTILO_CREW_2025',
+            5: 'THE_GIANT_CORPORATION_2025',
+            6: 'ARTE_SHEMBASEG',
+            7: 'ELEMENTS_2025',
+            8: 'CALINA_CUMBAY',
+            9: 'NUEVO_ESTILO_DANCE',
+            10: 'CORPO_EMERGIENDO',
+            15: 'CORPORACION_KHUYAY',
+            16: 'AMBIENTALISTAS_DE_CORAZON_451',
+            17: 'FUTURO_GUAJIRA',
+            18: 'MANGLARIA_DIVERSA',
+            19: 'MALOKA_JOVEN_2025',
+            20: 'INFLUENCERS_ETNICOS_2025',
+            21: 'CORPO_REYES_DE_LA_SELVA',
+            22: 'JUNTOS_POR_YACOPI',
+            24: 'LA_ESFERA_MUSICULTURA',
+            25: 'RED_CEPELA_2025',
+            26: 'ALTERNATIVO_2025',
+            27: 'KOMBILESA_MI',
+            28: 'GUAQUE_SOPO_2025',
+            29: 'CACEROLAZO_SINFONICO',
+            30: 'MEDANCE'
+        };
+
+        const ALBUM_NAME_OVERRIDES = {
+            BARIROCK: 'BariRock',
+            CACEROLAZO_SINFONICO: 'Cacerolazo Sinfonico',
+            CUMBRE_CASA_CULTURAL: 'Cumbre Casa Cultural',
+            DINASTIA_NEGRA: 'Dinastia Negra',
+            FUNDACION_AMAHIA: 'Fundacion Amahia',
+            JOVENES_CREADORES_CHOCO: 'Jovenes Creadores Choco',
+            LA_ESFERA_MUSICULTURA: 'La Esfera Musiqultura',
+            LA_TIGRA: 'La Tigra',
+            MALOKA_JOVEN_2025: 'Maloka Joven 2025'
+        };
+
+        const MATCH_STOPWORDS = new Set([
+            'LA', 'EL', 'LOS', 'LAS', 'DE', 'DEL', 'Y', 'POR', 'PARA', 'CON',
+            'CORPORACION', 'FUNDACION', 'CULTURAL', 'COMUNITARIA', 'COLECTIVA',
+            'ORGANIZACION', 'ARTISTICA', 'ARTISTICO', 'COMUNICACION', 'VISUAL',
+            'THE', 'COMMUNITY', 'CORPO', 'CASA'
+        ]);
+
+        let orgToAlbumCache = {};
+        let albumToOrgCache = {};
+
+        function normalizeComparableText(value) {
+            return (value || '')
+                .toString()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .toUpperCase()
+                .replace(/[^A-Z0-9]+/g, '_')
+                .replace(/_+/g, '_')
+                .replace(/^_+|_+$/g, '');
+        }
+
+        function normalizeComparableToken(token) {
+            let t = normalizeComparableText(token);
+            if (t.length > 4 && t.endsWith('ES')) {
+                t = t.slice(0, -2);
+            } else if (t.length > 4 && t.endsWith('S')) {
+                t = t.slice(0, -1);
+            }
+            return t;
+        }
+
+        function tokenizeComparable(value) {
+            const normalized = normalizeComparableText(value);
+            if (!normalized) return [];
+            return normalized
+                .split('_')
+                .map(normalizeComparableToken)
+                .filter(token => token && token.length >= 3 && !MATCH_STOPWORDS.has(token));
+        }
+
+        function getAlbumKeyFromFilename(filename) {
+            if (!filename) return '';
+            const base = filename
+                .replace(/^.*\//, '')
+                .replace(/\.jpg$/i, '')
+                .replace(/^\d+_/, '');
+            return base.replace(/_\d{2}_\d{2}_\d{4}$/, '');
+        }
+
+        function getAlbumKeyFromPhotoPath(photoPath) {
+            const filename = (photoPath || '').split('/').pop();
+            return getAlbumKeyFromFilename(filename);
+        }
+
+        function formatAlbumName(albumKey) {
+            if (ALBUM_NAME_OVERRIDES[albumKey]) return ALBUM_NAME_OVERRIDES[albumKey];
+            return albumKey.replace(/_/g, ' ').trim();
+        }
+
+        function buildAlbumOrgMaps(albums) {
+            const availableKeys = Object.keys(albums || {});
+            orgToAlbumCache = {};
+            albumToOrgCache = {};
+            const usedKeys = new Set();
+
+            function assignAlbum(org, albumKey) {
+                orgToAlbumCache[org.id] = albumKey;
+                albumToOrgCache[albumKey] = org;
+                usedKeys.add(albumKey);
+            }
+
+            organizaciones.forEach(org => {
+                const aliasKey = ORG_ALBUM_ALIASES[org.id];
+                if (aliasKey && albums[aliasKey] && !usedKeys.has(aliasKey)) {
+                    assignAlbum(org, aliasKey);
+                }
+            });
+
+            organizaciones.forEach(org => {
+                if (orgToAlbumCache[org.id]) return;
+
+                const orgTokens = tokenizeComparable((org.nombre || '') + ' ' + (org.nombreCompleto || ''));
+                if (!orgTokens.length) return;
+
+                const threshold = orgTokens.length <= 2 ? 1 : 2;
+                let bestKey = null;
+                let bestScore = 0;
+
+                availableKeys.forEach(key => {
+                    if (usedKeys.has(key)) return;
+                    const keyTokens = new Set(tokenizeComparable(key));
+                    if (!keyTokens.size) return;
+
+                    let score = 0;
+                    orgTokens.forEach(token => {
+                        if (keyTokens.has(token)) score++;
+                    });
+
+                    if (score > bestScore) {
+                        bestScore = score;
+                        bestKey = key;
+                    }
+                });
+
+                if (bestKey && bestScore >= threshold) {
+                    assignAlbum(org, bestKey);
+                }
+            });
+
+            return { orgToAlbum: orgToAlbumCache, albumToOrg: albumToOrgCache };
+        }
+
         // Sistema de shuffle sin repeticiones
         let shuffledPhotos = [];
         let currentShuffleIndex = 0;
@@ -1883,43 +2040,12 @@
 
         // Mapeo de nombres de fotos a organizaciones
         function getOrgFromPhoto(photoPath) {
-            const filename = photoPath.split('/').pop().toUpperCase();
-            
-            if (filename.includes('CODIGO_ESTILO_CREW')) {
-                return organizaciones.find(org => 
-                    org.nombre && org.nombre.toLowerCase().includes('código estilo')
-                );
-            } else if (filename.includes('THE_GIANT_CORPORATION')) {
-                return organizaciones.find(org => 
-                    org.nombre && org.nombre.toLowerCase().includes('giant')
-                );
-            } else if (filename.includes('RED_CEPELA')) {
-                return organizaciones.find(org => 
-                    org.nombre && org.nombre.toLowerCase().includes('cepela')
-                );
-            } else if (filename.includes('CASA_CULTURAL')) {
-                return organizaciones.find(org => 
-                    org.nombre && org.nombre.toLowerCase().includes('casa cultural')
-                );
-            } else if (filename.includes('MALOKA')) {
-                return organizaciones.find(org => 
-                    org.nombre && org.nombre.toLowerCase().includes('maloka')
-                );
-            } else if (filename.includes('GUAQUE') || filename.includes('SOPO')) {
-                return organizaciones.find(org => 
-                    org.nombre && (org.nombre.toLowerCase().includes('guaque') || org.municipio.toLowerCase().includes('sopó'))
-                );
-            } else if (filename.includes('ELEMENTS')) {
-                return organizaciones.find(org => 
-                    org.nombre && org.nombre.toLowerCase().includes('elements')
-                );
-            } else if (filename.includes('INFLUENCERS_ETNICOS')) {
-                return organizaciones.find(org => 
-                    org.nombre && org.nombre.toLowerCase().includes('influencers')
-                );
+            const albumKey = getAlbumKeyFromPhotoPath(photoPath);
+            if (!albumKey) return null;
+            if (!albumToOrgCache[albumKey]) {
+                buildAlbumOrgMaps(getAlbums());
             }
-            
-            return null;
+            return albumToOrgCache[albumKey] || null;
         }
 
         // Precarga de todas las imágenes con promesas
@@ -2289,37 +2415,27 @@
         // Agrupar fotos por organización
         function getAlbums() {
             const albums = {};
-            const albumNames = {
-                'CORPORACION_YUKUTA_': 'Corporación Yukuta',
-                'AMBIENTALISTAS_DE_CORAZON_451': 'Ambientalistas de Corazón',
-                'ARTE_SHEMBASEG': 'Minga Muralista Kamentsa',
-                'TEATRO_FAHRENHEIT_451': 'Teatro Fahrenheit 451',
-                'CODIGO_ESTILO_CREW_2025': 'Código Estilo Crew 2025',
-                'CUMBRE_CASA_CULTURAL': 'Cumbre Casa Cultural',
-                'MALOKA_JOVEN_2025': 'Maloka Joven 2025',
-                'GUAQUE_SOPO_2025': 'Guaque Sopó 2025',
-                'RED_CEPELA_2025': 'Red Cepela 2025',
-                'THE_GIANT_CORPORATION_2025': 'The Giant Corporation 2025',
-                'ELEMENTS_2025': 'Elements 2025',
-                'INFLUENCERS_ETNICOS_2025': 'Influencers Étnicos 2025',
-                'ALTERNATIVO_2025': 'Alternativo 2025'
-            };
-            
+
             fotosOrgs.forEach(foto => {
-                const filename = foto.split('/').pop();
-                // Extraer nombre de org quitando el número inicial
-                const match = filename.match(/^\d+_(.+)\.jpg$/i);
-                if (match) {
-                    const key = match[1];
-                    if (!albums[key]) {
-                        albums[key] = {
-                            name: albumNames[key] || key.replace(/_/g, ' '),
-                            photos: []
-                        };
-                    }
-                    albums[key].photos.push(foto);
+                const key = getAlbumKeyFromPhotoPath(foto);
+                if (!key) return;
+                if (!albums[key]) {
+                    albums[key] = {
+                        name: formatAlbumName(key),
+                        photos: []
+                    };
+                }
+                albums[key].photos.push(foto);
+            });
+
+            const maps = buildAlbumOrgMaps(albums);
+            Object.keys(albums).forEach(key => {
+                const mappedOrg = maps.albumToOrg[key];
+                if (mappedOrg) {
+                    albums[key].name = mappedOrg.nombre;
                 }
             });
+
             return albums;
         }
 
@@ -2333,44 +2449,38 @@
         function loadGallery() {
             const grid = document.getElementById('gallery-grid');
             const albums = getAlbums();
+            const maps = buildAlbumOrgMaps(albums);
             const isMobile = window.innerWidth < 768;
 
             const mode = isMobile ? 'mobile' : 'desktop';
             if (mode === lastGalleryMode) return;
             lastGalleryMode = mode;
 
-            // Mapeo org.id → clave de álbum (orgs que ya tienen fotos)
-            const orgAlbumMap = {
-                1:  'CORPORACION_YUKUTA_',
-                2:  'TEATRO_FAHRENHEIT_451',
-                4:  'CODIGO_ESTILO_CREW_2025',
-                6:  'ARTE_SHEMBASEG',
-                16: 'AMBIENTALISTAS_DE_CORAZON_451',
-                5:  'THE_GIANT_CORPORATION_2025',
-                7:  'ELEMENTS_2025',
-                19: 'MALOKA_JOVEN_2025',
-                20: 'INFLUENCERS_ETNICOS_2025',
-                25: 'RED_CEPELA_2025',
-                26: 'ALTERNATIVO_2025',
-                28: 'GUAQUE_SOPO_2025'
-            };
+            const allItems = [];
+            const usedAlbumKeys = new Set();
 
-            // Las 32 orgs como base (con datos reales si existen)
-            const allItems = organizaciones.map(org => {
-                const albumKey = orgAlbumMap[org.id];
-                if (albumKey && albums[albumKey]) {
-                    return { key: albumKey, name: albums[albumKey].name, album: albums[albumKey], isPlaceholder: false };
-                }
-                return { key: `ph-${org.id}`, name: org.nombre, isPlaceholder: true };
-            });
-
-            // Álbumes de eventos sin org asignada (CUMBRE, MALOKA, etc.) al final
-            const mappedKeys = new Set(Object.values(orgAlbumMap));
-            Object.keys(albums).forEach(k => {
-                if (!mappedKeys.has(k)) {
-                    allItems.push({ key: k, name: albums[k].name, album: albums[k], isPlaceholder: false });
+            // Álbumes asociados a organizaciones (orden directorio)
+            organizaciones.forEach(org => {
+                const albumKey = maps.orgToAlbum[org.id];
+                if (albumKey && albums[albumKey] && !usedAlbumKeys.has(albumKey)) {
+                    allItems.push({ key: albumKey, name: albums[albumKey].name, album: albums[albumKey] });
+                    usedAlbumKeys.add(albumKey);
                 }
             });
+
+            // Álbumes sin match de org: se muestran al final sin dejar tarjetas vacías
+            Object.keys(albums)
+            .filter(k => !usedAlbumKeys.has(k))
+            .sort((a, b) => albums[a].name.localeCompare(albums[b].name, 'es'))
+            .forEach(k => {
+                allItems.push({ key: k, name: albums[k].name, album: albums[k] });
+            });
+
+            if (!allItems.length) {
+                grid.className = 'honeycomb';
+                grid.innerHTML = '<p class="text-white text-sm">No hay fotos disponibles en la galeria.</p>';
+                return;
+            }
 
             // Construir filas
             const rows = [];
@@ -2395,22 +2505,8 @@
             let idx = 0;
             grid.innerHTML = rows.map((row, rowIndex) => {
                 const rowHtml = row.map(item => {
-                    let html;
-                    if (item.isPlaceholder) {
-                        html = `
-                        <div class="hex-wrap">
-                            <div class="album-card album-placeholder" id="album-${idx}">
-                                <div class="album-bg" style="background-image: url('assets/backgrownd/04_Jaguar%20rojo%201.jpg'); opacity: 1;"></div>
-                                <div class="album-overlay"></div>
-                                <div class="album-info">
-                                    <h3>${item.name}</h3>
-                                    <p class="placeholder-label">📷 Próximamente</p>
-                                </div>
-                            </div>
-                        </div>`;
-                    } else {
-                        const coverPhoto = item.album.photos[0];
-                        html = `
+                    const coverPhoto = item.album.photos[0];
+                    const html = `
                         <div class="hex-wrap">
                             <div class="album-card" onclick="openAlbum('${item.key}')" id="album-${idx}">
                                 <div class="album-bg" style="background-image: url('${coverPhoto}'); opacity: 1;" data-album-key="${item.key}"></div>
@@ -2421,7 +2517,6 @@
                                 </div>
                             </div>
                         </div>`;
-                    }
                     idx++;
                     return html;
                 }).join('');
@@ -2617,25 +2712,8 @@
 
         // Extraer nombre de organización de la foto
         function getOrgNameFromPhoto(photoPath) {
-            const filename = photoPath.split('/').pop();
-            if (filename.includes('CODIGO_ESTILO_CREW')) {
-                return 'Código Estilo Crew 2025';
-            } else if (filename.includes('THE_GIANT_CORPORATION')) {
-                return 'The Giant Corporation 2025';
-            } else if (filename.includes('RED_CEPELA')) {
-                return 'Red Cepela 2025';
-            } else if (filename.includes('CUMBRE_CASA_CULTURAL')) {
-                return 'Cumbre Casa Cultural';
-            } else if (filename.includes('MALOKA_JOVEN')) {
-                return 'Maloka Joven 2025';
-            } else if (filename.includes('GUAQUE_SOPO')) {
-                return 'Guaque Sopó 2025';
-            } else if (filename.includes('ELEMENTS')) {
-                return 'Elements 2025';
-            } else if (filename.includes('INFLUENCERS_ETNICOS')) {
-                return 'Influencers Étnicos 2025';
-            }
-            return 'Red Intercultural Juvenil';
+            const org = getOrgFromPhoto(photoPath);
+            return org ? org.nombre : 'Red Intercultural Juvenil';
         }
 
         // Navegar al mapa desde galería o slideshow
