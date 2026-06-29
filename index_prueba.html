@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Articulación Intercultural - Red Intercultural Juvenil</title>
+    <meta name="description" content="Ejercicios de trabajo y articulación intercultural entre las organizaciones de la Red Intercultural Juvenil de Colombia.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="assets/data.js?v=20260218b"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;800;900&display=swap');
+        
+        :root {
+            --color-primary: #ff6b35;
+            --color-secondary: #004e89;
+            --color-accent: #f7b801;
+            --color-verde: #2a9d8f;
+            --color-morado: #6a4c93;
+            --color-rojo: #9B1C31;
+        }
+
+        * {
+            scroll-behavior: smooth;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Work Sans', sans-serif;
+            overflow-x: hidden;
+            margin: 0;
+            background: #0f0a1e;
+            color: white;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Work Sans', sans-serif;
+            font-weight: 900;
+        }
+
+        /* Animación fade-in */
+        .fade-in {
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-40px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(40px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.85); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 107, 53, 0.15); }
+            50% { box-shadow: 0 0 35px rgba(255, 107, 53, 0.3); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Navegación */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 107, 53, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            box-shadow: none;
+        }
+        nav::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 107, 53, 0.95);
+            mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 1200 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,0 Q150,6 300,2 T600,4 T900,1 T1200,3 L1200,0 Z' fill='black'/%3E%3C/svg%3E");
+            -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 1200 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,0 Q150,6 300,2 T600,4 T900,1 T1200,3 L1200,0 Z' fill='black'/%3E%3C/svg%3E");
+            mask-size: 100% 100%;
+            -webkit-mask-size: 100% 100%;
+        }
+
+        /* Divisores orgánicos */
+        .section-divider {
+            position: relative;
+            width: 100%;
+            height: 0;
+            z-index: 10;
+            line-height: 0;
+            overflow: visible;
+        }
+        .section-divider svg {
+            display: block;
+            width: 100%;
+            height: 30px;
+            position: relative;
+        }
+        .section-divider.bottom svg {
+            margin-bottom: -29px;
+        }
+        @media (min-width: 768px) {
+            .section-divider svg {
+                height: 40px;
+            }
+            .section-divider.bottom svg {
+                margin-bottom: -39px;
+            }
+        }
+
+        /* Layout vertical para secciones */
+        .seccion-vertical-wrap {
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+            min-height: 100%;
+        }
+        .seccion-titulos {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            align-self: flex-start;
+            flex-shrink: 0;
+            padding: 2rem 0 2rem 1.5rem;
+            gap: 0.5rem;
+        }
+        .seccion-titulo-v {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            font-family: 'Work Sans', sans-serif;
+            font-weight: 900;
+            text-transform: uppercase;
+            line-height: 0.9;
+            letter-spacing: -0.02em;
+            white-space: nowrap;
+            font-size: clamp(3rem, 8vw, 9rem);
+            flex-shrink: 0;
+            color: #ffffff;
+        }
+        .seccion-subtitulo-v {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            font-family: 'Work Sans', sans-serif;
+            font-weight: 400;
+            font-style: italic;
+            line-height: 1;
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+            font-size: clamp(0.9rem, 1.8vw, 2rem);
+            flex-shrink: 0;
+            align-self: center;
+            color: rgba(255,255,255,0.5);
+        }
+        .seccion-contenido-wrap {
+            flex: 1;
+            min-width: 0;
+        }
+        @media (max-width: 767px) {
+            .seccion-vertical-wrap {
+                flex-direction: column;
+            }
+            .seccion-titulos {
+                flex-direction: column;
+                writing-mode: horizontal-tb;
+                padding: 1.5rem 1rem 0.5rem 1rem;
+                gap: 0.25rem;
+            }
+            .seccion-titulo-v {
+                writing-mode: horizontal-tb;
+                transform: none;
+                font-size: clamp(2.5rem, 12vw, 4rem);
+            }
+            .seccion-subtitulo-v {
+                writing-mode: horizontal-tb;
+                transform: none;
+                font-size: 1rem;
+                align-self: auto;
+                margin-bottom: 0.5rem;
+            }
+        }
+
+        /* Secciones fullscreen */
+        section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 3rem 1rem;
+            position: relative;
+        }
+        @media (min-width: 768px) {
+            section {
+                padding: 4rem 2rem;
+            }
+        }
+
+        /* ======================== */
+        /* ARTICULACIÓN CARDS       */
+        /* ======================== */
+
+        .articulacion-card {
+            background: rgba(255,255,255,0.06);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 18px;
+            padding: 1.5rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .articulacion-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-accent), var(--color-verde));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .articulacion-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(255,107,53,0.15);
+            border-color: rgba(255,107,53,0.25);
+            background: rgba(255,255,255,0.09);
+        }
+
+        .articulacion-card:hover::before {
+            opacity: 1;
+        }
+
+        .articulacion-card.expanded {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,107,53,0.3);
+        }
+
+        .articulacion-card.expanded::before {
+            opacity: 1;
+        }
+
+        /* Card header */
+        .art-card-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .art-card-icon {
+            width: 44px;
+            height: 44px;
+            flex-shrink: 0;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            background: linear-gradient(135deg, rgba(255,107,53,0.3), rgba(247,184,1,0.2));
+        }
+
+        .art-card-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .art-card-info h3 {
+            font-size: 0.92rem;
+            font-weight: 700;
+            line-height: 1.25;
+            margin-bottom: 0.25rem;
+            color: white;
+        }
+
+        .art-card-info .art-location {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.45);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .art-card-toggle {
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+            color: rgba(255,255,255,0.5);
+            font-size: 1.2rem;
+            font-weight: 300;
+            transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+            line-height: 1;
+        }
+
+        .articulacion-card.expanded .art-card-toggle {
+            transform: rotate(45deg);
+            background: rgba(255,107,53,0.3);
+            color: #ff6b35;
+        }
+
+        /* Tags */
+        .art-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            margin-top: 0.6rem;
+        }
+
+        .art-tag {
+            padding: 0.2rem 0.6rem;
+            border-radius: 9999px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+
+        .art-tag-festival { background: rgba(255,107,53,0.2); color: #ff9c6b; }
+        .art-tag-formacion { background: rgba(42,157,143,0.2); color: #5ec4b6; }
+        .art-tag-laboratorio { background: rgba(106,76,147,0.2); color: #a78bcc; }
+        .art-tag-circulacion { background: rgba(247,184,1,0.2); color: #f7d06b; }
+        .art-tag-residencia { background: rgba(0,78,137,0.2); color: #5ba3d9; }
+        .art-tag-otro { background: rgba(155,28,49,0.2); color: #e06578; }
+
+        /* Detail section */
+        .art-card-detail {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, opacity 0.3s ease, margin-top 0.3s ease;
+            opacity: 0;
+            margin-top: 0;
+        }
+
+        .articulacion-card.expanded .art-card-detail {
+            max-height: 600px;
+            opacity: 1;
+            margin-top: 0.85rem;
+        }
+
+        .art-detail-section {
+            padding: 0.6rem 0;
+            border-top: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .art-detail-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: rgba(255,255,255,0.35);
+            margin-bottom: 0.25rem;
+        }
+
+        .art-detail-value {
+            font-size: 0.82rem;
+            color: rgba(255,255,255,0.8);
+            line-height: 1.45;
+        }
+
+        /* Filter buttons */
+        .filter-btn-art {
+            padding: 0.4rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            border: 1.5px solid rgba(255,255,255,0.2);
+            background: transparent;
+            color: rgba(255,255,255,0.65);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            white-space: nowrap;
+        }
+        .filter-btn-art:hover {
+            border-color: #ff6b35;
+            color: #ff6b35;
+        }
+        .filter-btn-art.active {
+            background: #ff6b35;
+            border-color: #ff6b35;
+            color: white;
+        }
+
+        /* Stats cards */
+        .stat-card {
+            background: rgba(255,255,255,0.06);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(255,107,53,0.12);
+            border-color: rgba(255,107,53,0.2);
+        }
+
+        .stat-number {
+            font-size: 2.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ff6b35, #f7b801);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+        }
+
+        .stat-label {
+            font-size: 0.78rem;
+            color: rgba(255,255,255,0.5);
+            margin-top: 0.35rem;
+            font-weight: 500;
+        }
+
+        /* Connection lines visualization */
+        .connection-viz {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .connection-node {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.4rem 0.8rem;
+            background: rgba(255,255,255,0.08);
+            border-radius: 9999px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.75);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+            margin: 0.2rem;
+        }
+
+        .connection-node:hover {
+            background: rgba(255,107,53,0.15);
+            border-color: rgba(255,107,53,0.3);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .connection-node .node-count {
+            background: var(--color-primary);
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            font-weight: 800;
+        }
+
+        /* Hero section */
+        .hero-articulacion {
+            position: relative;
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0f0a1e 0%, #1a1035 40%, #2e1065 100%);
+        }
+
+        .hero-articulacion::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 50%, rgba(255,107,53,0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 30%, rgba(247,184,1,0.06) 0%, transparent 40%),
+                        radial-gradient(circle at 50% 80%, rgba(106,76,147,0.06) 0%, transparent 45%);
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .hero-mesh {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.06;
+            background-image: 
+                linear-gradient(rgba(255,107,53,0.3) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,107,53,0.3) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+
+        /* Map network visualization */
+        .network-map {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .network-line {
+            stroke: rgba(255,107,53,0.2);
+            stroke-width: 1;
+            stroke-dasharray: 4 4;
+            animation: dash 20s linear infinite;
+        }
+
+        @keyframes dash {
+            to { stroke-dashoffset: -100; }
+        }
+
+        /* Territorios map-like section */
+        .territorio-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.3rem 0.75rem;
+            background: rgba(42,157,143,0.12);
+            border: 1px solid rgba(42,157,143,0.2);
+            border-radius: 8px;
+            font-size: 0.72rem;
+            color: rgba(255,255,255,0.7);
+            margin: 0.2rem;
+            transition: all 0.2s;
+        }
+
+        .territorio-chip:hover {
+            background: rgba(42,157,143,0.25);
+            color: white;
+            transform: scale(1.03);
+        }
+
+        .territorio-chip svg {
+            width: 12px;
+            height: 12px;
+            opacity: 0.6;
+        }
+
+        /* Responsive */
+        @media (max-width: 639px) {
+            h1 {
+                font-size: 2.5rem !important;
+                line-height: 1.2;
+            }
+            h2 {
+                font-size: 1.75rem !important;
+            }
+        }
+
+        @media (max-width: 767px) {
+            body {
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Marquee logos */
+        .logos-marquee {
+            overflow: hidden;
+            position: relative;
+            width: 100vw;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 1.4rem 0;
+            background-color: #6b7280;
+        }
+        .logos-marquee::before, .logos-marquee::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 80px;
+            height: 100%;
+            z-index: 2;
+        }
+        .logos-marquee::before {
+            left: 0;
+            background: linear-gradient(to right, #6b7280, transparent);
+        }
+        .logos-marquee::after {
+            right: 0;
+            background: linear-gradient(to left, #6b7280, transparent);
+        }
+        .marquee-track {
+            display: flex;
+            align-items: center;
+            gap: 2.5rem;
+            animation: marquee-scroll 40s linear infinite;
+            width: max-content;
+        }
+        .marquee-track:hover {
+            animation-play-state: paused;
+        }
+        .marquee-track img {
+            height: 50px;
+            width: auto;
+            max-width: 120px;
+            object-fit: contain;
+            filter: grayscale(0.3) brightness(1.1);
+            transition: filter 0.3s;
+            flex-shrink: 0;
+        }
+        .marquee-track img:hover {
+            filter: grayscale(0) brightness(1.2);
+        }
+        @keyframes marquee-scroll {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+    </style>
+</head>
+<body class="bg-[#0f0a1e] text-white">
+
+    <!-- Navegación -->
+    <nav class="py-1" id="main-nav">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center flex-shrink-0">
+                    <a href="index.html">
+                        <img src="assets/logos/RIJ_SIGLA.png?v=20260218" alt="Red Intercultural Juvenil" class="h-12 md:h-16" style="filter: drop-shadow(2px 3px 4px rgba(80, 30, 0, 0.5));">
+                    </a>
+                </div>
+                <ul class="hidden md:flex space-x-5 text-base font-medium text-white/85">
+                    <li><a href="index.html" class="hover:text-yellow-400">← Inicio</a></li>
+                    <li><a href="#articulacion" class="hover:text-yellow-400">Articulación</a></li>
+                    <li><a href="#estadisticas" class="hover:text-yellow-400">Estadísticas</a></li>
+                    <li><a href="#territorios" class="hover:text-yellow-400">Territorios</a></li>
+                    <li><a href="#red-viva" class="hover:text-yellow-400">Red Viva</a></li>
+                </ul>
+                <button id="menu-toggle" class="md:hidden flex-shrink-0 p-2 ml-2 z-[1001] text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+            <!-- Mobile menu -->
+            <div id="mobile-menu" class="hidden md:hidden pb-4">
+                <ul class="space-y-2 text-sm font-medium text-white/85 mt-3">
+                    <li><a href="index.html" class="block py-1 hover:text-yellow-400">← Inicio</a></li>
+                    <li><a href="#articulacion" class="block py-1 hover:text-yellow-400">Articulación</a></li>
+                    <li><a href="#estadisticas" class="block py-1 hover:text-yellow-400">Estadísticas</a></li>
+                    <li><a href="#territorios" class="block py-1 hover:text-yellow-400">Territorios</a></li>
+                    <li><a href="#red-viva" class="block py-1 hover:text-yellow-400">Red Viva</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ======================================== -->
+    <!-- HERO: ARTICULACIÓN INTERCULTURAL         -->
+    <!-- ======================================== -->
+    <div class="hero-articulacion" style="padding-top: 5rem;">
+        <div class="hero-mesh"></div>
+        <div class="max-w-5xl mx-auto text-center px-4 relative z-10 fade-in">
+            <p class="text-sm md:text-base uppercase tracking-[0.3em] text-white/40 font-medium mb-4">Red Intercultural Juvenil · Convenio 2025</p>
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-black uppercase leading-none mb-6" style="letter-spacing: -0.03em;">
+                <span class="block" style="background: linear-gradient(135deg, #ff6b35, #f7b801); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Articulación</span>
+                <span class="block text-white/90">Intercultural</span>
+            </h1>
+            <p class="text-lg md:text-xl text-white/55 max-w-2xl mx-auto font-light leading-relaxed italic mb-8">
+                Ejercicios de trabajo entre organizaciones de la red — tejiendo territorio, cultura y comunidad
+            </p>
+            <div class="flex justify-center gap-4 flex-wrap">
+                <a href="#articulacion" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-500 to-amber-500 rounded-full text-white font-bold text-sm hover:shadow-lg hover:shadow-orange-500/25 transition-all hover:-translate-y-0.5">
+                    <span>Explorar Articulaciones</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Divider: Hero → Stats -->
+    <div class="section-divider bottom">
+        <svg viewBox="0 0 1200 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,0 L0,22 Q300,18 600,24 T1200,20 L1200,0 Z" fill="#1a1035"/>
+            <path d="M0,22 Q300,18 600,24 T1200,20 L1200,40 L0,40 Z" fill="#0f0a1e"/>
+        </svg>
+    </div>
+
+    <!-- ======================================== -->
+    <!-- ESTADÍSTICAS RESUMEN                     -->
+    <!-- ======================================== -->
+    <section id="estadisticas" class="bg-[#0f0a1e]" style="min-height: auto; padding: 4rem 1rem;">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-center text-2xl md:text-3xl font-black uppercase tracking-wide text-white/90 mb-2 animate-on-scroll">La Red en Cifras</h2>
+            <p class="text-center text-white/40 text-sm mb-10 animate-on-scroll">Datos de articulación intercultural en la vigencia del convenio</p>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6" id="stats-grid">
+                <!-- Stats rendered by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Divider -->
+    <div class="section-divider bottom">
+        <svg viewBox="0 0 1200 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,0 L0,20 Q400,24 800,18 T1200,22 L1200,0 Z" fill="#0f0a1e"/>
+            <path d="M0,20 Q400,24 800,18 T1200,22 L1200,40 L0,40 Z" fill="#2e1065"/>
+        </svg>
+    </div>
+
+    <!-- ======================================== -->
+    <!-- SECCIÓN PRINCIPAL: ARTICULACIONES        -->
+    <!-- ======================================== -->
+    <section id="articulacion" style="background-color: #2e1065; min-height: auto; padding: 3rem 0;">
+        <div class="seccion-vertical-wrap">
+            <!-- Título vertical -->
+            <div class="seccion-titulos">
+                <span class="seccion-titulo-v">TEJIDOS</span>
+                <span class="seccion-subtitulo-v">Articulaciones Interculturales</span>
+            </div>
+            <!-- Contenido -->
+            <div class="seccion-contenido-wrap">
+                <div class="max-w-6xl mx-auto px-4">
+                    <!-- Filtros -->
+                    <div class="mb-6">
+                        <p class="text-white/30 text-xs uppercase tracking-widest mb-3 font-semibold">Filtrar por formato</p>
+                        <div class="flex flex-wrap gap-2" id="art-filters">
+                            <button class="filter-btn-art active" data-filter="all">Todas</button>
+                            <button class="filter-btn-art" data-filter="Festival">🎪 Festival</button>
+                            <button class="filter-btn-art" data-filter="Encuentro de formación">📚 Formación</button>
+                            <button class="filter-btn-art" data-filter="Laboratorio">🧪 Laboratorio</button>
+                            <button class="filter-btn-art" data-filter="Circulación">🌀 Circulación</button>
+                            <button class="filter-btn-art" data-filter="Residencia">🏠 Residencia</button>
+                        </div>
+                    </div>
+
+                    <!-- Contador -->
+                    <p class="text-white/30 text-xs mb-4" id="art-count">Mostrando 15 articulaciones</p>
+
+                    <!-- Grid de articulaciones -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="articulacion-grid">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Divider -->
+    <div class="section-divider bottom">
+        <svg viewBox="0 0 1200 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,0 L0,22 Q300,17 600,23 T1200,19 L1200,0 Z" fill="#2e1065"/>
+            <path d="M0,22 Q300,17 600,23 T1200,19 L1200,40 L0,40 Z" fill="#1a0a2e"/>
+        </svg>
+    </div>
+
+    <!-- ======================================== -->
+    <!-- TERRITORIOS                              -->
+    <!-- ======================================== -->
+    <section id="territorios" style="background-color: #1a0a2e; min-height: auto; padding: 4rem 1rem;">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-center text-2xl md:text-3xl font-black uppercase tracking-wide text-white/90 mb-2 animate-on-scroll">Territorios Articulados</h2>
+            <p class="text-center text-white/40 text-sm mb-8 animate-on-scroll">Lugares donde se tejieron procesos de articulación intercultural</p>
+
+            <div class="flex flex-wrap justify-center gap-2 animate-on-scroll" id="territorios-cloud">
+                <!-- Rendered by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Divider -->
+    <div class="section-divider bottom">
+        <svg viewBox="0 0 1200 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,0 L0,20 Q400,25 800,18 T1200,22 L1200,0 Z" fill="#1a0a2e"/>
+            <path d="M0,20 Q400,25 800,18 T1200,22 L1200,40 L0,40 Z" fill="#9B1C31"/>
+        </svg>
+    </div>
+
+    <!-- ======================================== -->
+    <!-- RED VIVA: ORGANIZACIONES ALIADAS         -->
+    <!-- ======================================== -->
+    <section id="red-viva" style="background-color: #9B1C31; min-height: auto; padding: 4rem 1rem;">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-center text-2xl md:text-3xl font-black uppercase tracking-wide text-white/90 mb-2 animate-on-scroll">Red Viva</h2>
+            <p class="text-center text-white/40 text-sm mb-8 animate-on-scroll">Organizaciones y colectivos que participaron en procesos de articulación</p>
+
+            <div class="flex flex-wrap justify-center gap-2 animate-on-scroll" id="aliados-cloud">
+                <!-- Rendered by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Divider: Red Viva → Footer -->
+    <div class="section-divider bottom">
+        <svg viewBox="0 0 1200 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,0 L0,20 Q400,25 800,18 T1200,22 L1200,0 Z" fill="#9B1C31"/>
+            <path d="M0,20 Q400,25 800,18 T1200,22 L1200,40 L0,40 Z" fill="#111827"/>
+        </svg>
+    </div>
+
+    <!-- FOOTER -->
+    <footer id="contacto" class="bg-gray-900 text-white pt-12 pb-6">
+        <div class="max-w-7xl mx-auto px-4">
+            <!-- Marquesina de logos -->
+            <p class="text-center text-white/40 text-xs uppercase tracking-widest mb-4">Organizaciones participantes</p>
+            <div class="logos-marquee mb-10 overflow-hidden" id="logos-marquee">
+                <div class="marquee-track" id="marquee-track">
+                    <!-- JS fills -->
+                </div>
+            </div>
+
+            <!-- Nav back -->
+            <div class="text-center mb-8">
+                <a href="index.html" class="inline-flex items-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/15 rounded-full text-white/80 hover:text-white font-semibold text-sm transition-all">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                    Volver al sitio principal
+                </a>
+            </div>
+
+            <!-- Créditos -->
+            <div class="border-t border-white/10 pt-6 text-center">
+                <div class="flex flex-col md:flex-row justify-center items-center gap-3 mb-4 text-sm text-white/60">
+                    <p><strong class="text-white/80">Orientación Estratégica:</strong> Jeimmy Ruiz Cardenas</p>
+                    <span class="hidden md:inline text-white/20">|</span>
+                    <p><strong class="text-white/80">Realización Gráfica y Audiovisual:</strong> Felipe Camacho Otero</p>
+                </div>
+                <img src="assets/logos/RIJ_SIGLA.png?v=20260218" alt="RIJ" class="h-10 w-auto mx-auto mb-3 opacity-50">
+                <p class="text-white/30 text-xs">
+                    © 2026 Red Intercultural Juvenil · Todos los derechos reservados
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ======================================== -->
+    <!-- JAVASCRIPT                               -->
+    <!-- ======================================== -->
+    <script>
+        // ========== DATA: Articulaciones Interculturales ==========
+        const articulaciones = [
+            {
+                participo: true,
+                proceso: "Intercambio cultural",
+                aliados: "Colectivo Guaque",
+                lugar: "Sibundoy Putumayo y Sopó Cundinamarca",
+                formatos: ["Festival", "Encuentro de formación"],
+                otro: ""
+            },
+            {
+                participo: true,
+                proceso: "",
+                aliados: "Corporación Vida y Paz, Crew Peligrosos",
+                lugar: "Inírida, San José de Guaviare y Medellín",
+                formatos: ["Festival", "Encuentro de formación", "Circulación"],
+                otro: ""
+            },
+            {
+                participo: true,
+                proceso: "Semana de la RIJ",
+                aliados: "The Giants, Fundación Canalón, Rey de la selva, Nuevo Style Dance",
+                lugar: "Cali",
+                formatos: ["Laboratorio", "Circulación"],
+                otro: ""
+            },
+            {
+                participo: true,
+                proceso: "Festival Biohoty",
+                aliados: "Colectivos",
+                lugar: "Tocancipá",
+                formatos: ["Festival", "Encuentro de formación"],
+                otro: ""
+            },
+            {
+                participo: true,
+                proceso: "Artes para La Paz",
+                aliados: "Corporación Calina Cumbay",
+                lugar: "Bogotá y Armero",
+                formatos: ["Encuentro de formación", "Otro"],
+                otro: "Evento de cierre"
+            },
+            {
+                participo: true,
+                proceso: "Festival Bari Rock Festival 2025",
+                aliados: "Festival La Tigra Santander",
+                lugar: "Norte de Santander, Cúcuta",
+                formatos: ["Festival"],
+                otro: ""
+            },
+            {
+                participo: true,
+                proceso: "Parche en la Montaña y Juventud en Movimiento",
+                aliados: "Red de danza infantil y juvenil de Medellín, Código Estilo Crew, Festival Selva Adentro, Corporación Ritmo Extremo, Corporación Emergiendo, Rainbow Dance Ballet",
+                lugar: "Darién, Medellín, Manizales, Armenia, Montelíbano, Montería, Urabá",
+                formatos: ["Festival", "Encuentro de formación", "Laboratorio", "Residencia", "Circulación"],
+                otro: ""
+            },
+            {
+                participo: true,
+                proceso: "Intercambio con Fundación Linderos de Paz y Feria Biocultural Lagunillas",
+                aliados: "Linderos de Paz (RIJ)",
+                lugar: "Armero Guayabal Tolima y Usme Bogotá",
+                formatos: ["Festival", "Encuentro de formación", "Circulación", "Otro"],
+                otro: "Procesos formativos de danza, teatro y circo social"
+            },
+            {
+                participo: true,
+                proceso: "Intercambio Medellín, Manizales, Risaralda",
+                aliados: "Crew Peligrosos, Corporación Emergiendo, Chuyai",
+                lugar: "Medellín, Armenia, Caldas, Risaralda",
+                formatos: ["Festival", "Encuentro de formación", "Circulación"],
+                otro: ""
+            },
+            {
+                participo: false,
+                proceso: "",
+                aliados: "Organización barrial local (no pertenece a la red)",
+                lugar: "Dosquebradas, Risaralda",
+                formatos: ["Laboratorio", "Otro"],
+                otro: "Intervención artística de tipo mural comunitario colaborativo"
+            },
+            {
+                participo: true,
+                proceso: "Nodo Pacífico RIJ",
+                aliados: "Comunidades aliadas y organizaciones de la RIJ",
+                lugar: "Cali",
+                formatos: ["Encuentro de formación", "Laboratorio", "Circulación"],
+                otro: ""
+            },
+            {
+                participo: true,
+                proceso: "Fortalecimiento de Policromía y participación en la 4Eskuela. Huellas y voces del territorio (Nodo Eje Oriental)",
+                aliados: "Corpomergiendo, Código Estilo, Crew Peligrosos, Corporación La Tigra, Corporación Arreglando el País, Barirock, comunidad del Barrio Otún",
+                lugar: "Medellín, Pereira, Manizales, Belalcázar",
+                formatos: ["Festival"],
+                otro: ""
+            },
+            {
+                participo: true,
+                proceso: "Red Intercultural Juvenil",
+                aliados: "Pazcífica Cultural, Fundación Escuela Canalón, Fundación Nuevo Estilo Dance, Reyes de la Selva",
+                lugar: "Valle del Cauca y Cauca",
+                formatos: ["Festival"],
+                otro: ""
+            },
+            {
+                participo: true,
+                proceso: "Semana de la RIJ",
+                aliados: "Arreglando el País, Khuyay y Barirock",
+                lugar: "Piedecuesta, Pereira, Cúcuta y Pitalito",
+                formatos: ["Encuentro de formación"],
+                otro: ""
+            }
+        ];
+
+        // ========== RENDER STATS ==========
+        function renderStats() {
+            const total = articulaciones.length;
+            const participaron = articulaciones.filter(a => a.participo).length;
+            
+            // Count unique formats
+            const allFormats = {};
+            articulaciones.forEach(a => {
+                a.formatos.forEach(f => {
+                    if (f !== 'Otro') allFormats[f] = (allFormats[f] || 0) + 1;
+                });
+            });
+
+            // Count unique territories
+            const allPlaces = new Set();
+            articulaciones.forEach(a => {
+                const parts = a.lugar.split(/[,y]/).map(p => p.trim()).filter(p => p.length > 0);
+                parts.forEach(p => allPlaces.add(p));
+            });
+
+            // Count unique aliados
+            const allAliados = new Set();
+            articulaciones.forEach(a => {
+                const parts = a.aliados.split(/[,]/).map(p => p.trim()).filter(p => p.length > 1);
+                parts.forEach(p => allAliados.add(p));
+            });
+
+            const statsData = [
+                { number: participaron, label: "Organizaciones articuladas" },
+                { number: Object.keys(allFormats).length, label: "Formatos diferentes" },
+                { number: allPlaces.size, label: "Territorios alcanzados" },
+                { number: allAliados.size, label: "Colectivos y aliados" }
+            ];
+
+            const grid = document.getElementById('stats-grid');
+            grid.innerHTML = statsData.map((s, i) => `
+                <div class="stat-card animate-on-scroll" style="transition-delay: ${i * 100}ms">
+                    <div class="stat-number" id="stat-${i}">0</div>
+                    <div class="stat-label">${s.label}</div>
+                </div>
+            `).join('');
+
+            // Animate numbers
+            setTimeout(() => {
+                statsData.forEach((s, i) => {
+                    animateNumber(`stat-${i}`, s.number, 1500);
+                });
+            }, 600);
+        }
+
+        function animateNumber(elId, target, duration) {
+            const el = document.getElementById(elId);
+            if (!el) return;
+            const start = performance.now();
+            function update(now) {
+                const elapsed = now - start;
+                const progress = Math.min(elapsed / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                el.textContent = Math.round(eased * target);
+                if (progress < 1) requestAnimationFrame(update);
+            }
+            requestAnimationFrame(update);
+        }
+
+        // ========== RENDER ARTICULACIONES ==========
+        const formatIcons = {
+            "Festival": "🎪",
+            "Encuentro de formación": "📚",
+            "Laboratorio": "🧪",
+            "Circulación": "🌀",
+            "Residencia": "🏠",
+            "Otro": "✦"
+        };
+
+        const formatTagClass = {
+            "Festival": "art-tag-festival",
+            "Encuentro de formación": "art-tag-formacion",
+            "Laboratorio": "art-tag-laboratorio",
+            "Circulación": "art-tag-circulacion",
+            "Residencia": "art-tag-residencia",
+            "Otro": "art-tag-otro"
+        };
+
+        let currentFilter = 'all';
+
+        function renderArticulaciones() {
+            const grid = document.getElementById('articulacion-grid');
+            const countEl = document.getElementById('art-count');
+            
+            const filtered = currentFilter === 'all' 
+                ? articulaciones 
+                : articulaciones.filter(a => a.formatos.includes(currentFilter));
+            
+            countEl.textContent = `Mostrando ${filtered.length} articulaci${filtered.length === 1 ? 'ón' : 'ones'}`;
+
+            grid.innerHTML = filtered.map((a, i) => {
+                const title = a.proceso || a.aliados.split(',')[0].trim();
+                const icon = a.participo ? '🤝' : '🔗';
+                const tags = a.formatos.map(f => 
+                    `<span class="art-tag ${formatTagClass[f] || 'art-tag-otro'}">${formatIcons[f] || '✦'} ${f}</span>`
+                ).join('');
+                
+                const detailHtml = `
+                    <div class="art-card-detail">
+                        ${a.proceso ? `
+                        <div class="art-detail-section">
+                            <div class="art-detail-label">Proceso / Iniciativa</div>
+                            <div class="art-detail-value">${a.proceso}</div>
+                        </div>` : ''}
+                        <div class="art-detail-section">
+                            <div class="art-detail-label">Aliados y organizaciones</div>
+                            <div class="art-detail-value">${a.aliados}</div>
+                        </div>
+                        <div class="art-detail-section">
+                            <div class="art-detail-label">Territorio</div>
+                            <div class="art-detail-value" style="display:flex;align-items:center;gap:0.3rem;">
+                                <svg class="w-3.5 h-3.5 text-green-400 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                                ${a.lugar}
+                            </div>
+                        </div>
+                        ${a.otro ? `
+                        <div class="art-detail-section">
+                            <div class="art-detail-label">Nota adicional</div>
+                            <div class="art-detail-value" style="font-style:italic;color:rgba(255,255,255,0.6);">${a.otro}</div>
+                        </div>` : ''}
+                        <div class="art-detail-section" style="border-top: none; padding-top: 0.3rem;">
+                            <span class="inline-flex items-center gap-1 text-xs ${a.participo ? 'text-green-400' : 'text-amber-400'}">
+                                <span class="w-2 h-2 rounded-full ${a.participo ? 'bg-green-400' : 'bg-amber-400'}"></span>
+                                ${a.participo ? 'Participó en actividad intercultural con la red' : 'Articulación con organización externa a la red'}
+                            </span>
+                        </div>
+                    </div>
+                `;
+
+                return `
+                    <div class="articulacion-card animate-on-scroll" style="transition-delay: ${(i % 6) * 80}ms" onclick="toggleArtCard(this)">
+                        <div class="art-card-header">
+                            <div class="art-card-icon">${icon}</div>
+                            <div class="art-card-info">
+                                <h3>${title}</h3>
+                                <div class="art-location">
+                                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                                    ${a.lugar.length > 45 ? a.lugar.substring(0, 45) + '...' : a.lugar}
+                                </div>
+                            </div>
+                            <div class="art-card-toggle">+</div>
+                        </div>
+                        <div class="art-tags">${tags}</div>
+                        ${detailHtml}
+                    </div>
+                `;
+            }).join('');
+
+            // Re-observe for scroll animations
+            observeAnimations();
+        }
+
+        function toggleArtCard(card) {
+            card.classList.toggle('expanded');
+        }
+
+        // ========== RENDER TERRITORIOS ==========
+        function renderTerritorios() {
+            const places = {};
+            articulaciones.forEach(a => {
+                // Split by comma and "y" to get individual places
+                const parts = a.lugar.split(/,/).map(p => p.trim()).filter(p => p.length > 0);
+                parts.forEach(p => {
+                    // Clean and normalize
+                    const clean = p.replace(/^\s*y\s+/i, '').trim();
+                    if (clean.length > 1) {
+                        places[clean] = (places[clean] || 0) + 1;
+                    }
+                });
+            });
+
+            const sorted = Object.entries(places).sort((a, b) => b[1] - a[1]);
+
+            const container = document.getElementById('territorios-cloud');
+            container.innerHTML = sorted.map(([place, count]) => {
+                const size = count >= 3 ? 'text-base' : count >= 2 ? 'text-sm' : 'text-xs';
+                const opacity = count >= 3 ? 'opacity-100' : count >= 2 ? 'opacity-80' : 'opacity-60';
+                return `
+                    <div class="territorio-chip ${opacity}" style="font-size: ${count >= 3 ? '0.85rem' : count >= 2 ? '0.78rem' : '0.72rem'}">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                        ${place}
+                        ${count > 1 ? `<span class="ml-1 text-white/40 font-bold">(${count})</span>` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ========== RENDER ALIADOS / RED VIVA ==========
+        function renderAliados() {
+            const aliados = {};
+            articulaciones.forEach(a => {
+                const parts = a.aliados.split(/,/).map(p => p.trim()).filter(p => p.length > 1);
+                parts.forEach(p => {
+                    const clean = p.replace(/^\s*y\s+/i, '').trim();
+                    if (clean.length > 1) {
+                        aliados[clean] = (aliados[clean] || 0) + 1;
+                    }
+                });
+            });
+
+            const sorted = Object.entries(aliados).sort((a, b) => b[1] - a[1]);
+
+            const container = document.getElementById('aliados-cloud');
+            container.innerHTML = sorted.map(([name, count]) => {
+                const isRIJ = isRIJOrg(name);
+                return `
+                    <div class="connection-node" style="${isRIJ ? 'border-color: rgba(255,107,53,0.4); background: rgba(255,107,53,0.1);' : ''}">
+                        ${isRIJ ? '<span style="color:#ff6b35;font-size:0.6rem;font-weight:800;">RIJ</span>' : ''}
+                        ${name}
+                        ${count > 1 ? `<span class="node-count">${count}</span>` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Check if aliado is an org in the RIJ network
+        function isRIJOrg(name) {
+            if (typeof organizaciones === 'undefined') return false;
+            const lower = name.toLowerCase();
+            return organizaciones.some(org => {
+                const n = org.nombre.toLowerCase();
+                const nc = (org.nombreCompleto || '').toLowerCase();
+                return lower.includes(n) || n.includes(lower) ||
+                       lower.includes(nc) || nc.includes(lower);
+            });
+        }
+
+        // ========== FILTERS ==========
+        document.getElementById('art-filters').addEventListener('click', function(e) {
+            if (e.target.classList.contains('filter-btn-art')) {
+                document.querySelectorAll('.filter-btn-art').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                currentFilter = e.target.dataset.filter;
+                renderArticulaciones();
+            }
+        });
+
+        // ========== LOGOS MARQUEE ==========
+        function initMarquee() {
+            if (typeof organizaciones === 'undefined') return;
+            const track = document.getElementById('marquee-track');
+            let html = '';
+            const orgsWithLogo = organizaciones.filter(o => o.logo);
+            // Duplicate for seamless loop
+            for (let rep = 0; rep < 2; rep++) {
+                orgsWithLogo.forEach(org => {
+                    html += `<img src="${org.logo}" alt="${org.nombre}" title="${org.nombre}" loading="lazy">`;
+                });
+            }
+            track.innerHTML = html;
+        }
+
+        // ========== SCROLL ANIMATIONS ==========
+        function observeAnimations() {
+            const elements = document.querySelectorAll('.animate-on-scroll:not(.visible)');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+            elements.forEach(el => observer.observe(el));
+        }
+
+        // ========== MOBILE MENU ==========
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Close menu on link click
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('mobile-menu').classList.add('hidden');
+            });
+        });
+
+        // ========== INIT ==========
+        document.addEventListener('DOMContentLoaded', function() {
+            renderStats();
+            renderArticulaciones();
+            renderTerritorios();
+            renderAliados();
+            initMarquee();
+            observeAnimations();
+        });
+    </script>
+</body>
+</html>
