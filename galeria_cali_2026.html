@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Encuentro Cali 2026 — Red Intercultural Juvenil</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0c0c0e;
+    --naranja: #ff6b35;
+    --amarillo: #f7b801;
+    --rojo: #9b1c31;
+    --fg: #f5f5f7;
+    --dim: rgba(245, 245, 247, 0.65);
+    --muted: rgba(245, 245, 247, 0.38);
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.07);
+  }
+  
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  html, body {
+    height: 100%;
+  }
+  
+  body {
+    font-family: 'Work Sans', system-ui, sans-serif;
+    background-color: var(--ink);
+    color: var(--fg);
+    overflow-x: hidden;
+    overflow-y: auto;
+    position: relative;
+  }
+  
+  /* Subtle mesh glow effects for premium look */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -20%;
+    left: -20%;
+    width: 60%;
+    height: 60%;
+    background: radial-gradient(circle, rgba(255, 107, 53, 0.06) 0%, transparent 70%);
+    z-index: -1;
+    pointer-events: none;
+  }
+  
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: -20%;
+    right: -20%;
+    width: 60%;
+    height: 60%;
+    background: radial-gradient(circle, rgba(247, 184, 1, 0.04) 0%, transparent 70%);
+    z-index: -1;
+    pointer-events: none;
+  }
+  
+  /* ---- Top Header ---- */
+  .top {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 40px;
+    background: rgba(12, 12, 14, 0.8);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--glass-border);
+  }
+  
+  .top .brand {
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .2em;
+    font-size: 13px;
+    color: var(--fg);
+  }
+  
+  .top .meta {
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .16em;
+    font-size: 12px;
+    color: var(--dim);
+  }
+  
+  /* ---- Layout Shell ---- */
+  #gallery-shell {
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    min-height: 100vh;
+    padding-top: 75px; /* height of header */
+    gap: 0;
+  }
+  
+  /* ---- Sidebar (Intro) ---- */
+  .intro {
+    position: sticky;
+    top: 75px;
+    height: calc(100vh - 75px);
+    overflow-y: auto;
+    padding: 48px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    background: rgba(12, 12, 14, 0.95);
+    border-right: 1px solid var(--glass-border);
+    z-index: 18;
+  }
+  
+  .intro::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  .intro::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+  }
+  
+  /* Embedded Title */
+  .vtitle-inline {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 8px;
+  }
+  
+  .vtitle-inline .big {
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: 56px;
+    line-height: .86;
+    letter-spacing: -.03em;
+  }
+  
+  .vtitle-inline .big em {
+    color: var(--naranja);
+    font-style: normal;
+  }
+  
+  .vtitle-inline .sub {
+    font-weight: 400;
+    font-size: 14px;
+    color: var(--dim);
+    margin-top: 10px;
+    letter-spacing: .02em;
+    line-height: 1.4;
+  }
+  
+  .intro .kicker {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .15em;
+    color: var(--naranja);
+  }
+  
+  .intro h1 {
+    font-size: 28px;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -.01em;
+  }
+  
+  .intro h1 em {
+    font-style: normal;
+    color: var(--amarillo);
+  }
+  
+  .intro p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--dim);
+  }
+  
+  /* Stats Cards Grid */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 8px;
+  }
+  
+  .stats > div {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--glass-border);
+    padding: 12px 6px;
+    border-radius: 10px;
+    text-align: center;
+  }
+  
+  .stats .n {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--naranja);
+    line-height: 1.2;
+  }
+  
+  .stats .l {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+  
+  .intro .hint {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+    border-left: 2px solid var(--naranja);
+    padding-left: 12px;
+    margin-top: 8px;
+  }
+  
+  /* Filter Buttons */
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  
+  .filter-btn {
+    border: 1px solid var(--glass-border);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--fg);
+    padding: 10px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    backdrop-filter: blur(8px);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  .filter-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+  }
+  
+  .filter-btn.active {
+    background: linear-gradient(135deg, var(--naranja), var(--amarillo));
+    color: #0c0c0e;
+    border-color: transparent;
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.25);
+    transform: translateY(-1px);
+  }
+  
+  /* ---- Gallery Shell (Right Side) ---- */
+  .mosaic-shell {
+    padding: 48px 40px;
+    z-index: 10;
+  }
+  
+  .mosaic-track {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    width: 100%;
+  }
+  
+  .mosaic-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    animation: fadeInSection 0.5s ease-out forwards;
+  }
+  
+  @keyframes fadeInSection {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .mosaic-section h2 {
+    font-size: 20px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--fg);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .mosaic-section h2 span {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.04);
+    padding: 4px 10px;
+    border-radius: 99px;
+    letter-spacing: 0.02em;
+  }
+  
+  /* Photo Grid */
+  .mosaic-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+  }
+  
+  .mosaic-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    display: block;
+    cursor: pointer;
+    background: #151518;
+    aspect-ratio: 4/5;
+    border: 1px solid var(--glass-border);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease, box-shadow 0.4s ease;
+    padding: 0;
+    width: 100%;
+  }
+  
+  .mosaic-item::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 65%, rgba(0,0,0,0.85) 100%);
+    opacity: 0.85;
+    transition: opacity 0.4s ease;
+  }
+  
+  .mosaic-item:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255, 107, 53, 0.4);
+    box-shadow: 0 12px 30px rgba(255, 107, 53, 0.18);
+  }
+  
+  .mosaic-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  .mosaic-item:hover img {
+    transform: scale(1.06);
+  }
+  
+  .thumb-label {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    z-index: 5;
+    background: rgba(12, 12, 14, 0.6);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+  
+  .mosaic-item:hover .thumb-label {
+    background: var(--naranja);
+    border-color: var(--naranja);
+  }
+  
+  /* Buttons and Actions */
+  .bottom-actions {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 54px;
+    padding-top: 32px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    width: 100%;
+  }
+  
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    text-decoration: none;
+    font-family: inherit;
+  }
+  
+  .btn-primary {
+    background: linear-gradient(135deg, var(--naranja), var(--amarillo));
+    color: #0c0c0e;
+    border: none;
+    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.2);
+  }
+  
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.35);
+  }
+  
+  .btn-secondary {
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--fg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(8px);
+  }
+  
+  .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+  }
+  
+  /* ---- Lightbox ---- */
+  #lb {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(8, 8, 10, 0.95);
+    backdrop-filter: blur(20px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  #lb.open {
+    display: flex;
+  }
+  
+  #lb-img-container {
+    position: relative;
+    max-width: 90vw;
+    max-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  #lb img {
+    max-width: 100%;
+    max-height: 80vh;
+    object-fit: contain;
+    border-radius: 12px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  #lb .x {
+    position: absolute;
+    top: 24px;
+    right: 30px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 110;
+  }
+  
+  #lb .x:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: scale(1.05);
+  }
+  
+  #lb .nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    user-select: none;
+    z-index: 105;
+  }
+  
+  #lb .nav:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-50%) scale(1.05);
+  }
+  
+  #lb .prev {
+    left: 20px;
+  }
+  
+  #lb .next {
+    right: 20px;
+  }
+  
+  #lb .cap {
+    position: absolute;
+    bottom: -40px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    color: var(--dim);
+  }
+  
+  /* ---- Responsive Media Queries ---- */
+  @media(max-width: 1024px) {
+    #gallery-shell {
+      grid-template-columns: 1fr;
+      padding-top: 65px;
+    }
+    
+    .top {
+      padding: 16px 24px;
+    }
+    
+    .intro {
+      position: relative;
+      top: auto;
+      height: auto;
+      border-right: none;
+      border-bottom: 1px solid var(--glass-border);
+      padding: 36px 24px;
+      gap: 20px;
+    }
+    
+    .vtitle-inline .big {
+      font-size: 46px;
+    }
+    
+    .mosaic-shell {
+      padding: 32px 24px;
+    }
+    
+    .mosaic-track {
+      gap: 36px;
+    }
+    
+    .mosaic-grid {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 12px;
+    }
+    
+    #lb .nav {
+      width: 44px;
+      height: 44px;
+      font-size: 24px;
+    }
+    
+    #lb .prev {
+      left: 12px;
+    }
+    
+    #lb .next {
+      right: 12px;
+    }
+    
+    #lb img {
+      max-width: 86vw;
+    }
+  }
+  
+  @media(max-width: 520px) {
+    .top {
+      padding: 14px 16px;
+    }
+    
+    .top .brand {
+      font-size: 11px;
+      letter-spacing: .15em;
+    }
+    
+    .top .meta {
+      font-size: 10px;
+      letter-spacing: .1em;
+    }
+    
+    .intro {
+      padding: 24px 16px;
+    }
+    
+    .vtitle-inline .big {
+      font-size: 38px;
+    }
+    
+    .stats {
+      gap: 8px;
+    }
+    
+    .stats .n {
+      font-size: 18px;
+    }
+    
+    .stats .l {
+      font-size: 9px;
+    }
+    
+    .mosaic-shell {
+      padding: 24px 12px;
+    }
+    
+    .mosaic-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+    
+    .bottom-actions {
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 36px;
+      padding-top: 24px;
+    }
+    
+    .bottom-actions .btn {
+      width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="brand">RIJ · Colombia</div>
+  <div class="meta">Cali · Junio 2026</div>
+</div>
+
+<div id="gallery-shell">
+  <aside class="intro">
+    <div class="vtitle-inline">
+      <span class="big">Cali <em>2026</em></span>
+      <span class="sub">Memorias del encuentro nacional de la Red Intercultural Juvenil</span>
+    </div>
+    
+    <div class="kicker">— Galería del encuentro</div>
+    <h1>El tejido <em>se reunió</em> en Cali.</h1>
+    <p>Cuatro jornadas de encuentro, formación BOICOP, recorrido por el territorio y diálogos IUIPC. Una memoria visual de las juventudes que tejen país.</p>
+    
+    <div class="stats">
+      <div><div class="n" id="stat-total">0</div><div class="l">Fotos</div></div>
+      <div><div class="n">4</div><div class="l">Jornadas</div></div>
+      <div><div class="n">24–27</div><div class="l">Junio</div></div>
+    </div>
+    
+    <div class="hint">Haz clic en un día para filtrar y explora los momentos del encuentro.</div>
+    <div class="filters" id="day-filters" aria-label="Filtros de días para la galería"></div>
+  </aside>
+  
+  <section class="mosaic-shell">
+    <div class="mosaic-track" id="mosaic-track" aria-label="Mosaico de la galería del encuentro de Cali"></div>
+    
+    <div class="bottom-actions">
+      <button type="button" class="btn btn-secondary" id="btn-top">Volver Arriba</button>
+      <a href="index.html" class="btn btn-primary">Volver a principal</a>
+    </div>
+  </section>
+</div>
+
+<div id="lb" aria-hidden="true">
+  <span class="x" onclick="closeLb()">&times;</span>
+  <span class="nav prev" onclick="stepLb(-1)">&#8249;</span>
+  <span class="nav next" onclick="stepLb(1)">&#8250;</span>
+  <div id="lb-img-container">
+    <img id="lb-img" src="" alt="">
+    <div class="cap" id="lb-cap"></div>
+  </div>
+</div>
+
+<script>
+const BASE = 'assets/photos_enc_cali_26';
+const pad = n => String(n).padStart(2,'0');
+const seq = (n, fn) => Array.from({length:n}, (_,i) => fn(i+1));
+
+const GALLERY_DAYS = [
+  {
+    day: '24 Junio',
+    sections: [
+      { title: 'Llegada y presentaciones', photos: [
+        ...seq(6, i => `${BASE}/24_06_2026/${pad(i)}_rij_cali_boicop_iuipc_24_06_2026.jpg`),
+        ...seq(7, i => `${BASE}/24_06_2026/${pad(i)}_rij_presentaciones_hotel_pm_24_06_2026.jpg`),
+      ]}
+    ]
+  },
+  {
+    day: '25 Junio',
+    sections: [
+      { title: 'BOICOP mañana', photos: seq(22, i => `${BASE}/25_06_2026/01_AM/${pad(i)}_rij_boicop_jornada_1_am_25_06_2026.jpg`).filter(src => !src.includes('/09_rij_boicop')) },
+      { title: 'BOICOP tarde', photos: seq(20, i => `${BASE}/25_06_2026/02_PM/${pad(i)}_rij_boicop_jornada_1_pm_25_06_2026.jpg`) },
+      { title: 'Monumento · recorrido', photos: seq(41, i => `${BASE}/25_06_2026/03_PR/${pad(i)}_rij_monumento_pr_jornada_1_pm_25_06_2026.jpg`) }
+    ]
+  },
+  {
+    day: '26 Junio',
+    sections: [
+      { title: 'IUIPC tarde', photos: seq(51, i => `${BASE}/26_06_2026/${pad(i)}_rij_iuipc_jornada_2_pm_26_06_2026.jpg`) }
+    ]
+  },
+  {
+    day: '27 Junio',
+    sections: [
+      { title: 'IUIPC mañana', photos: seq(21, i => `${BASE}/27_06_2026/${pad(i)}_rij_iuipc_jornada_3_am_27_06_2026.jpg`) }
+    ]
+  }
+];
+
+const filterBar = document.getElementById('day-filters');
+const mosaicTrack = document.getElementById('mosaic-track');
+const btnTop = document.getElementById('btn-top');
+const lb = document.getElementById('lb');
+const lbImg = document.getElementById('lb-img');
+const lbCap = document.getElementById('lb-cap');
+
+let currentDay = GALLERY_DAYS[0];
+let currentPhotos = [];
+let currentIndex = 0;
+
+// Calculate total photos count across all days and display it
+const totalPhotos = GALLERY_DAYS.reduce((sum, day) => {
+  return sum + day.sections.reduce((secSum, sec) => secSum + sec.photos.length, 0);
+}, 0);
+document.getElementById('stat-total').textContent = totalPhotos;
+
+function createFilterButtons() {
+  // Add "Todas" button
+  const allBtn = document.createElement('button');
+  allBtn.type = 'button';
+  allBtn.className = 'filter-btn';
+  allBtn.dataset.day = 'todas';
+  allBtn.textContent = 'Todas';
+  allBtn.addEventListener('click', () => selectDay('todas'));
+  filterBar.appendChild(allBtn);
+
+  GALLERY_DAYS.forEach(day => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'filter-btn';
+    btn.dataset.day = day.day;
+    btn.textContent = day.day;
+    btn.addEventListener('click', () => selectDay(day.day));
+    filterBar.appendChild(btn);
+  });
+}
+
+function selectDay(dayKey) {
+  if (dayKey === 'todas') {
+    currentDay = {
+      day: 'Todas',
+      sections: GALLERY_DAYS.flatMap(d => d.sections.map(sec => ({
+        ...sec,
+        dayName: d.day
+      })))
+    };
+  } else {
+    currentDay = GALLERY_DAYS.find(d => d.day === dayKey) || GALLERY_DAYS[0];
+  }
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.day === dayKey);
+  });
+  renderMosaic(currentDay);
+}
+
+function renderMosaic(day) {
+  mosaicTrack.innerHTML = '';
+  currentPhotos = day.sections.flatMap(section => section.photos);
+
+  let offset = 0;
+  day.sections.forEach(section => {
+    const sectionEl = document.createElement('section');
+    sectionEl.className = 'mosaic-section';
+    const dayLabel = section.dayName || day.day;
+    sectionEl.innerHTML = `<h2>${dayLabel} · ${section.title} <span>${section.photos.length} fotos</span></h2>`;
+
+    const grid = document.createElement('div');
+    grid.className = 'mosaic-grid';
+
+    section.photos.forEach((src, index) => {
+      const globalIndex = offset + index;
+      const item = document.createElement('button');
+      item.type = 'button';
+      item.className = 'mosaic-item';
+      item.innerHTML = `<img loading="lazy" src="${src}" alt="${section.title} — ${dayLabel}"><span class="thumb-label">${index + 1}</span>`;
+      item.addEventListener('click', () => openLb(globalIndex));
+      grid.appendChild(item);
+    });
+
+    offset += section.photos.length;
+    sectionEl.appendChild(grid);
+    mosaicTrack.appendChild(sectionEl);
+  });
+}
+
+function openLb(photoIndex) {
+  currentIndex = photoIndex;
+  renderLightbox();
+  document.body.style.overflow = 'hidden';
+  lb.style.display = 'flex';
+  // Trigger transition
+  setTimeout(() => {
+    lb.classList.add('open');
+    lb.style.opacity = '1';
+    lb.setAttribute('aria-hidden', 'false');
+  }, 10);
+}
+
+function getPhotoMeta(src) {
+  for (const day of GALLERY_DAYS) {
+    for (const sec of day.sections) {
+      if (sec.photos.includes(src)) {
+        return { dayName: day.day, sectionTitle: sec.title };
+      }
+    }
+  }
+  return { dayName: currentDay.day, sectionTitle: '' };
+}
+
+function renderLightbox() {
+  lbImg.style.opacity = '0';
+  lbImg.style.transform = 'scale(0.96)';
+  
+  // Set new src
+  setTimeout(() => {
+    const src = currentPhotos[currentIndex];
+    lbImg.src = src;
+    const meta = getPhotoMeta(src);
+    lbCap.textContent = `${meta.dayName} · Foto ${currentIndex + 1} de ${currentPhotos.length}`;
+    
+    // When loaded, fade in and scale up
+    lbImg.onload = () => {
+      lbImg.style.opacity = '1';
+      lbImg.style.transform = 'scale(1)';
+    };
+  }, 100);
+}
+
+function closeLb() {
+  lb.style.opacity = '0';
+  lb.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+  
+  setTimeout(() => {
+    lb.classList.remove('open');
+    lb.style.display = 'none';
+  }, 300);
+}
+
+function stepLb(direction) {
+  if (!currentPhotos.length) return;
+  currentIndex = (currentIndex + direction + currentPhotos.length) % currentPhotos.length;
+  renderLightbox();
+}
+
+btnTop.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+lb.addEventListener('click', (event) => {
+  if (event.target === lb || event.target === document.getElementById('lb-img-container')) {
+    closeLb();
+  }
+});
+
+document.addEventListener('keydown', (event) => {
+  if (!lb.classList.contains('open')) return;
+  if (event.key === 'Escape') closeLb();
+  if (event.key === 'ArrowRight') stepLb(1);
+  if (event.key === 'ArrowLeft') stepLb(-1);
+});
+
+// Initialize
+createFilterButtons();
+selectDay('todas');
+</script>
+</body>
+</html>
