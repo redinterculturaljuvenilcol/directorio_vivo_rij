@@ -645,11 +645,26 @@
 
         nav a {
             color: rgba(255, 255, 255, 0.85);
-            transition: color 0.3s ease;
+            transition: color 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
         }
 
         nav a:hover {
             color: var(--color-accent);
+        }
+
+        nav a.new-link {
+            background: rgba(255, 255, 255, 0.95);
+            color: #1a1a1a;
+            border-radius: 999px;
+            padding: 0.45rem 1rem;
+            font-weight: 700;
+            box-shadow: 0 0 0 1px rgba(255,255,255,.18);
+        }
+
+        nav a.new-link:hover {
+            transform: translateY(-1px);
+            background: #f7b801;
+            color: #1a1a1a;
         }
 
         /* Logo RIJ en nav */
@@ -1083,6 +1098,47 @@
             height: 20px;
             fill: white;
         }
+        .instagram-soon-label {
+            margin-top: 0.35rem;
+            color: #f7b801;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            line-height: 1;
+        }
+        a[aria-label="Instagram RIJ"],
+        .instagram-soon {
+            position: relative;
+        }
+        a[aria-label="Instagram RIJ"]::after,
+        .instagram-soon::after {
+            content: 'Próximamente';
+            position: absolute;
+            left: 50%;
+            top: calc(100% + 8px);
+            transform: translate(-50%, -6px);
+            background: rgba(17, 24, 39, 0.95);
+            color: #fff;
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            padding: 0.28rem 0.42rem;
+            border-radius: 0.38rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            z-index: 25;
+        }
+        a[aria-label="Instagram RIJ"]:hover::after,
+        a[aria-label="Instagram RIJ"]:focus-visible::after,
+        .instagram-soon:hover::after,
+        .instagram-soon:focus-visible::after {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
         /* Popup social icons need dark fill */
         .org-popup .popup-socials .social-icon svg {
             fill: #333;
@@ -1341,23 +1397,18 @@
                 <ul class="hidden md:flex space-x-5 text-base font-medium text-white/85">
                     <li><a href="#inicio" class="hover:text-yellow-400">Inicio</a></li>
                     <li><a href="#galeria" class="hover:text-yellow-400">Galería</a></li>
+                    <li><a href="galeria_cali_2026.html" class="hover:text-yellow-400 new-link">Cali 2026</a></li>
+                    <li><a href="red_viva.html" class="hover:text-yellow-400">Red Viva</a></li>
                     <li><a href="#mapa" class="hover:text-yellow-400">Mapa</a></li>
                     <li><a href="#directorio" class="hover:text-yellow-400">Directorio</a></li>
-                    <li><a href="red_viva.html" class="hover:text-yellow-400">Red Viva</a></li>
                     <li><a href="#envolvente" class="hover:text-yellow-400">Envolvente</a></li>
                     <li><a href="#contacto" class="hover:text-yellow-400">Contacto</a></li>
                     <li class="flex items-center gap-2 -ml-2">
                         <a href="mailto:redinterculturaljuvenilcol@gmail.com" class="text-white/85 hover:text-yellow-400" aria-label="Correo RIJ">
                             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
                         </a>
-                        <a href="https://www.instagram.com/redinterculturaljuvenilcol/" target="_blank" rel="noopener" class="text-white/85 hover:text-yellow-400" aria-label="Instagram RIJ">
+                        <a href="https://www.instagram.com/rijcol" target="_blank" rel="noopener" class="text-white/85 hover:text-yellow-400" aria-label="Instagram RIJ">
                             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-                        </a>
-                        <a href="https://www.facebook.com/profile.php?id=61590596994808" target="_blank" rel="noopener" class="text-white/85 hover:text-yellow-400" aria-label="Facebook RIJ">
-                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                        </a>
-                        <a href="https://www.tiktok.com/@redinterjuvcolombia" target="_blank" rel="noopener" class="text-white/85 hover:text-yellow-400" aria-label="TikTok RIJ">
-                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
                         </a>
                         <a href="https://www.youtube.com/@RedInterculturalJuvenilCol" target="_blank" rel="noopener" class="text-white/85 hover:text-yellow-400" aria-label="YouTube RIJ">
                             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
@@ -1626,9 +1677,10 @@
                 <div class="bg-white/5 backdrop-blur rounded-xl p-6 text-center">
                     <h3 class="text-lg font-bold mb-3">Instagram</h3>
                     <div class="flex justify-center mb-2">
-                        <a href="https://www.instagram.com/redinterculturaljuvenilcol/" target="_blank" rel="noopener" class="social-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+                        <span class="social-icon instagram-soon" role="img" aria-label="Instagram RIJ próximamente"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></span>
                     </div>
-                    <a href="https://www.instagram.com/redinterculturaljuvenilcol/" target="_blank" rel="noopener" class="text-orange-400 hover:text-orange-300 text-sm underline">@rijcol · Red Intercultural Juvenil - Colombia</a>
+                    <p class="instagram-soon-label">Próximamente</p>
+                    <p class="text-orange-400 text-sm">@rijcol · Red Intercultural Juvenil - Colombia</p>
                 </div>
                 <div class="bg-white/5 backdrop-blur rounded-xl p-6 text-center">
                     <h3 class="text-lg font-bold mb-3">YouTube</h3>
@@ -1655,8 +1707,8 @@
     </footer>
 
     <script>
-        // Array de fotos de organizaciones (205 fotos totales)
-        const fotosOrgs = [
+        // Array fallback de fotos; se sobreescribe con el manifiesto si existe
+        let fotosOrgs = [
             'assets/photos_orgs/01_CORPORACION_YUKUTA_.jpg',
             'assets/photos_orgs/02_CORPORACION_YUKUTA_.jpg',
             'assets/photos_orgs/03_CORPORACION_YUKUTA_.jpg',
@@ -1864,6 +1916,162 @@
             'assets/photos_orgs/15_ALTERNATIVO_2025.jpg'
         ];
 
+        if (Array.isArray(window.fotosOrgsManifest) && window.fotosOrgsManifest.length) {
+            fotosOrgs = [...window.fotosOrgsManifest];
+        }
+
+        const ORG_ALBUM_ALIASES = {
+            1: 'CORPORACION_YUKUTA_',
+            2: 'TEATRO_FAHRENHEIT_451',
+            3: 'ODEC',
+            4: 'CODIGO_ESTILO_CREW_2025',
+            5: 'THE_GIANT_CORPORATION_2025',
+            6: 'ARTE_SHEMBASEG',
+            7: 'ELEMENTS_2025',
+            8: 'CALINA_CUMBAY',
+            9: 'NUEVO_ESTILO_DANCE',
+            10: 'CORPO_EMERGIENDO',
+            15: 'CORPORACION_KHUYAY',
+            16: 'AMBIENTALISTAS_DE_CORAZON_451',
+            17: 'FUTURO_GUAJIRA',
+            18: 'MANGLARIA_DIVERSA',
+            19: 'MALOKA_JOVEN_2025',
+            20: 'INFLUENCERS_ETNICOS_2025',
+            21: 'CORPO_REYES_DE_LA_SELVA',
+            22: 'JUNTOS_POR_YACOPI',
+            24: 'LA_ESFERA_MUSICULTURA',
+            25: 'RED_CEPELA_2025',
+            26: 'ALTERNATIVO_2025',
+            27: 'KOMBILESA_MI',
+            28: 'GUAQUE_SOPO_2025',
+            29: 'CACEROLAZO_SINFONICO',
+            30: 'MEDANCE'
+        };
+
+        const ALBUM_NAME_OVERRIDES = {
+            BARIROCK: 'BariRock',
+            CACEROLAZO_SINFONICO: 'Cacerolazo Sinfonico',
+            CUMBRE_CASA_CULTURAL: 'Cumbre Casa Cultural',
+            DINASTIA_NEGRA: 'Dinastia Negra',
+            FUNDACION_AMAHIA: 'Fundacion Amahia',
+            JOVENES_CREADORES_CHOCO: 'Jovenes Creadores Choco',
+            LA_ESFERA_MUSICULTURA: 'La Esfera Musiqultura',
+            LA_TIGRA: 'La Bellecera',
+            MALOKA_JOVEN_2025: 'Maloka Joven 2025'
+        };
+
+        const MATCH_STOPWORDS = new Set([
+            'LA', 'EL', 'LOS', 'LAS', 'DE', 'DEL', 'Y', 'POR', 'PARA', 'CON',
+            'CORPORACION', 'FUNDACION', 'CULTURAL', 'COMUNITARIA', 'COLECTIVA',
+            'ORGANIZACION', 'ARTISTICA', 'ARTISTICO', 'COMUNICACION', 'VISUAL',
+            'THE', 'COMMUNITY', 'CORPO', 'CASA'
+        ]);
+
+        let orgToAlbumCache = {};
+        let albumToOrgCache = {};
+
+        function normalizeComparableText(value) {
+            return (value || '')
+                .toString()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .toUpperCase()
+                .replace(/[^A-Z0-9]+/g, '_')
+                .replace(/_+/g, '_')
+                .replace(/^_+|_+$/g, '');
+        }
+
+        function normalizeComparableToken(token) {
+            let t = normalizeComparableText(token);
+            if (t.length > 4 && t.endsWith('ES')) {
+                t = t.slice(0, -2);
+            } else if (t.length > 4 && t.endsWith('S')) {
+                t = t.slice(0, -1);
+            }
+            return t;
+        }
+
+        function tokenizeComparable(value) {
+            const normalized = normalizeComparableText(value);
+            if (!normalized) return [];
+            return normalized
+                .split('_')
+                .map(normalizeComparableToken)
+                .filter(token => token && token.length >= 3 && !MATCH_STOPWORDS.has(token));
+        }
+
+        function getAlbumKeyFromFilename(filename) {
+            if (!filename) return '';
+            const base = filename
+                .replace(/^.*\//, '')
+                .replace(/\.jpg$/i, '')
+                .replace(/^\d+_/, '');
+            return base.replace(/_\d{2}_\d{2}_\d{4}$/, '');
+        }
+
+        function getAlbumKeyFromPhotoPath(photoPath) {
+            const filename = (photoPath || '').split('/').pop();
+            return getAlbumKeyFromFilename(filename);
+        }
+
+        function formatAlbumName(albumKey) {
+            if (ALBUM_NAME_OVERRIDES[albumKey]) return ALBUM_NAME_OVERRIDES[albumKey];
+            return albumKey.replace(/_/g, ' ').trim();
+        }
+
+        function buildAlbumOrgMaps(albums) {
+            const availableKeys = Object.keys(albums || {});
+            orgToAlbumCache = {};
+            albumToOrgCache = {};
+            const usedKeys = new Set();
+
+            function assignAlbum(org, albumKey) {
+                orgToAlbumCache[org.id] = albumKey;
+                albumToOrgCache[albumKey] = org;
+                usedKeys.add(albumKey);
+            }
+
+            organizaciones.forEach(org => {
+                const aliasKey = ORG_ALBUM_ALIASES[org.id];
+                if (aliasKey && albums[aliasKey] && !usedKeys.has(aliasKey)) {
+                    assignAlbum(org, aliasKey);
+                }
+            });
+
+            organizaciones.forEach(org => {
+                if (orgToAlbumCache[org.id]) return;
+
+                const orgTokens = tokenizeComparable((org.nombre || '') + ' ' + (org.nombreCompleto || ''));
+                if (!orgTokens.length) return;
+
+                const threshold = orgTokens.length <= 2 ? 1 : 2;
+                let bestKey = null;
+                let bestScore = 0;
+
+                availableKeys.forEach(key => {
+                    if (usedKeys.has(key)) return;
+                    const keyTokens = new Set(tokenizeComparable(key));
+                    if (!keyTokens.size) return;
+
+                    let score = 0;
+                    orgTokens.forEach(token => {
+                        if (keyTokens.has(token)) score++;
+                    });
+
+                    if (score > bestScore) {
+                        bestScore = score;
+                        bestKey = key;
+                    }
+                });
+
+                if (bestKey && bestScore >= threshold) {
+                    assignAlbum(org, bestKey);
+                }
+            });
+
+            return { orgToAlbum: orgToAlbumCache, albumToOrg: albumToOrgCache };
+        }
+
         // Sistema de shuffle sin repeticiones
         let shuffledPhotos = [];
         let currentShuffleIndex = 0;
@@ -1891,43 +2099,12 @@
 
         // Mapeo de nombres de fotos a organizaciones
         function getOrgFromPhoto(photoPath) {
-            const filename = photoPath.split('/').pop().toUpperCase();
-            
-            if (filename.includes('CODIGO_ESTILO_CREW')) {
-                return organizaciones.find(org => 
-                    org.nombre && org.nombre.toLowerCase().includes('código estilo')
-                );
-            } else if (filename.includes('THE_GIANT_CORPORATION')) {
-                return organizaciones.find(org => 
-                    org.nombre && org.nombre.toLowerCase().includes('giant')
-                );
-            } else if (filename.includes('RED_CEPELA')) {
-                return organizaciones.find(org => 
-                    org.nombre && org.nombre.toLowerCase().includes('cepela')
-                );
-            } else if (filename.includes('CASA_CULTURAL')) {
-                return organizaciones.find(org => 
-                    org.nombre && org.nombre.toLowerCase().includes('casa cultural')
-                );
-            } else if (filename.includes('MALOKA')) {
-                return organizaciones.find(org => 
-                    org.nombre && org.nombre.toLowerCase().includes('maloka')
-                );
-            } else if (filename.includes('GUAQUE') || filename.includes('SOPO')) {
-                return organizaciones.find(org => 
-                    org.nombre && (org.nombre.toLowerCase().includes('guaque') || org.municipio.toLowerCase().includes('sopó'))
-                );
-            } else if (filename.includes('ELEMENTS')) {
-                return organizaciones.find(org => 
-                    org.nombre && org.nombre.toLowerCase().includes('elements')
-                );
-            } else if (filename.includes('INFLUENCERS_ETNICOS')) {
-                return organizaciones.find(org => 
-                    org.nombre && org.nombre.toLowerCase().includes('influencers')
-                );
+            const albumKey = getAlbumKeyFromPhotoPath(photoPath);
+            if (!albumKey) return null;
+            if (!albumToOrgCache[albumKey]) {
+                buildAlbumOrgMaps(getAlbums());
             }
-            
-            return null;
+            return albumToOrgCache[albumKey] || null;
         }
 
         // Precarga de todas las imágenes con promesas
@@ -2297,37 +2474,27 @@
         // Agrupar fotos por organización
         function getAlbums() {
             const albums = {};
-            const albumNames = {
-                'CORPORACION_YUKUTA_': 'Corporación Yukuta',
-                'AMBIENTALISTAS_DE_CORAZON_451': 'Ambientalistas de Corazón',
-                'ARTE_SHEMBASEG': 'Minga Muralista Kamentsa',
-                'TEATRO_FAHRENHEIT_451': 'Teatro Fahrenheit 451',
-                'CODIGO_ESTILO_CREW_2025': 'Código Estilo Crew 2025',
-                'CUMBRE_CASA_CULTURAL': 'Cumbre Casa Cultural',
-                'MALOKA_JOVEN_2025': 'Maloka Joven 2025',
-                'GUAQUE_SOPO_2025': 'Guaque Sopó 2025',
-                'RED_CEPELA_2025': 'Red Cepela 2025',
-                'THE_GIANT_CORPORATION_2025': 'The Giant Corporation 2025',
-                'ELEMENTS_2025': 'Elements 2025',
-                'INFLUENCERS_ETNICOS_2025': 'Influencers Étnicos 2025',
-                'ALTERNATIVO_2025': 'Alternativo 2025'
-            };
-            
+
             fotosOrgs.forEach(foto => {
-                const filename = foto.split('/').pop();
-                // Extraer nombre de org quitando el número inicial
-                const match = filename.match(/^\d+_(.+)\.jpg$/i);
-                if (match) {
-                    const key = match[1];
-                    if (!albums[key]) {
-                        albums[key] = {
-                            name: albumNames[key] || key.replace(/_/g, ' '),
-                            photos: []
-                        };
-                    }
-                    albums[key].photos.push(foto);
+                const key = getAlbumKeyFromPhotoPath(foto);
+                if (!key) return;
+                if (!albums[key]) {
+                    albums[key] = {
+                        name: formatAlbumName(key),
+                        photos: []
+                    };
+                }
+                albums[key].photos.push(foto);
+            });
+
+            const maps = buildAlbumOrgMaps(albums);
+            Object.keys(albums).forEach(key => {
+                const mappedOrg = maps.albumToOrg[key];
+                if (mappedOrg) {
+                    albums[key].name = mappedOrg.nombre;
                 }
             });
+
             return albums;
         }
 
@@ -2341,44 +2508,38 @@
         function loadGallery() {
             const grid = document.getElementById('gallery-grid');
             const albums = getAlbums();
+            const maps = buildAlbumOrgMaps(albums);
             const isMobile = window.innerWidth < 768;
 
             const mode = isMobile ? 'mobile' : 'desktop';
             if (mode === lastGalleryMode) return;
             lastGalleryMode = mode;
 
-            // Mapeo org.id → clave de álbum (orgs que ya tienen fotos)
-            const orgAlbumMap = {
-                1:  'CORPORACION_YUKUTA_',
-                2:  'TEATRO_FAHRENHEIT_451',
-                4:  'CODIGO_ESTILO_CREW_2025',
-                6:  'ARTE_SHEMBASEG',
-                16: 'AMBIENTALISTAS_DE_CORAZON_451',
-                5:  'THE_GIANT_CORPORATION_2025',
-                7:  'ELEMENTS_2025',
-                19: 'MALOKA_JOVEN_2025',
-                20: 'INFLUENCERS_ETNICOS_2025',
-                25: 'RED_CEPELA_2025',
-                26: 'ALTERNATIVO_2025',
-                28: 'GUAQUE_SOPO_2025'
-            };
+            const allItems = [];
+            const usedAlbumKeys = new Set();
 
-            // Las 32 orgs como base (con datos reales si existen)
-            const allItems = organizaciones.map(org => {
-                const albumKey = orgAlbumMap[org.id];
-                if (albumKey && albums[albumKey]) {
-                    return { key: albumKey, name: albums[albumKey].name, album: albums[albumKey], isPlaceholder: false };
-                }
-                return { key: `ph-${org.id}`, name: org.nombre, isPlaceholder: true };
-            });
-
-            // Álbumes de eventos sin org asignada (CUMBRE, MALOKA, etc.) al final
-            const mappedKeys = new Set(Object.values(orgAlbumMap));
-            Object.keys(albums).forEach(k => {
-                if (!mappedKeys.has(k)) {
-                    allItems.push({ key: k, name: albums[k].name, album: albums[k], isPlaceholder: false });
+            // Álbumes asociados a organizaciones (orden directorio)
+            organizaciones.forEach(org => {
+                const albumKey = maps.orgToAlbum[org.id];
+                if (albumKey && albums[albumKey] && !usedAlbumKeys.has(albumKey)) {
+                    allItems.push({ key: albumKey, name: albums[albumKey].name, album: albums[albumKey] });
+                    usedAlbumKeys.add(albumKey);
                 }
             });
+
+            // Álbumes sin match de org: se muestran al final sin dejar tarjetas vacías
+            Object.keys(albums)
+            .filter(k => !usedAlbumKeys.has(k))
+            .sort((a, b) => albums[a].name.localeCompare(albums[b].name, 'es'))
+            .forEach(k => {
+                allItems.push({ key: k, name: albums[k].name, album: albums[k] });
+            });
+
+            if (!allItems.length) {
+                grid.className = 'honeycomb';
+                grid.innerHTML = '<p class="text-white text-sm">No hay fotos disponibles en la galeria.</p>';
+                return;
+            }
 
             // Construir filas
             const rows = [];
@@ -2403,22 +2564,8 @@
             let idx = 0;
             grid.innerHTML = rows.map((row, rowIndex) => {
                 const rowHtml = row.map(item => {
-                    let html;
-                    if (item.isPlaceholder) {
-                        html = `
-                        <div class="hex-wrap">
-                            <div class="album-card album-placeholder" id="album-${idx}">
-                                <div class="album-bg" style="background-image: url('assets/backgrownd/04_Jaguar%20rojo%201.jpg'); opacity: 1;"></div>
-                                <div class="album-overlay"></div>
-                                <div class="album-info">
-                                    <h3>${item.name}</h3>
-                                    <p class="placeholder-label">📷 Próximamente</p>
-                                </div>
-                            </div>
-                        </div>`;
-                    } else {
-                        const coverPhoto = item.album.photos[0];
-                        html = `
+                    const coverPhoto = item.album.photos[0];
+                    const html = `
                         <div class="hex-wrap">
                             <div class="album-card" onclick="openAlbum('${item.key}')" id="album-${idx}">
                                 <div class="album-bg" style="background-image: url('${coverPhoto}'); opacity: 1;" data-album-key="${item.key}"></div>
@@ -2429,7 +2576,6 @@
                                 </div>
                             </div>
                         </div>`;
-                    }
                     idx++;
                     return html;
                 }).join('');
@@ -2901,20 +3047,10 @@
         }
 
         // Preloader logic — mínimo 5 segundos, espera a que TODO esté cargado
-        // Si el usuario ya visitó el sitio en esta sesión (viene de red_viva.html, etc.), skip preloader
         (function() {
             const preloader = document.getElementById('preloader');
             const preloaderBg = document.getElementById('preloader-bg');
             const preloaderVideo = document.getElementById('preloader-video');
-
-            // Si ya se mostró el preloader en esta sesión, saltarlo inmediatamente
-            const alreadyVisited = sessionStorage.getItem('rij_preloader_shown');
-            if (alreadyVisited) {
-                preloader.remove();
-                return;
-            }
-            // Marcar que el preloader se mostró en esta sesión
-            sessionStorage.setItem('rij_preloader_shown', '1');
             const bgImages = [
                 'assets/backgrownd/01_MAPA_JAGUAR 2.jpg',
                 'assets/backgrownd/02_selva.jpg',
@@ -3033,10 +3169,10 @@
             // Esperar a que TODAS las condiciones se cumplan: timer + window.load + imágenes
             Promise.all([timerPromise, windowLoadPromise, allImagesPromise]).then(dismissPreloader);
 
-            // Seguridad: si después de 8s algo falla, descartar de todas maneras
+            // Seguridad: si después de 15s algo falla, descartar de todas maneras
             setTimeout(function() {
                 dismissPreloader();
-            }, 8000);
+            }, 15000);
         })();
 
         // Menu móvil
@@ -3050,26 +3186,13 @@
                 <ul class="flex flex-col space-y-2 px-4">
                     <li><a href="#inicio" class="block py-2 text-white/85 hover:text-yellow-400">Inicio</a></li>
                     <li><a href="#galeria" class="block py-2 text-white/85 hover:text-yellow-400">Galería</a></li>
+                    <li><a href="galeria_cali_2026.html" class="block py-2 text-white/85 hover:text-yellow-400 new-link">Cali 2026</a></li>
+                    <li><a href="red_viva.html" class="block py-2 text-white/85 hover:text-yellow-400">Red Viva</a></li>
                     <li><a href="#mapa" class="block py-2 text-white/85 hover:text-yellow-400">Mapa</a></li>
                     <li><a href="#directorio" class="block py-2 text-white/85 hover:text-yellow-400">Directorio</a></li>
-                    <li><a href="red_viva.html" class="block py-2 text-white/85 hover:text-yellow-400">Red Viva</a></li>
                     <li><a href="#envolvente" class="block py-2 text-white/85 hover:text-yellow-400">Envolvente</a></li>
                     <li><a href="#contacto" class="block py-2 text-white/85 hover:text-yellow-400">Contacto</a></li>
                 </ul>
-                <div class="flex items-center justify-center gap-3 px-4 pt-4 border-t border-white/10">
-                    <a href="https://www.instagram.com/redinterculturaljuvenilcol/" target="_blank" rel="noopener" class="text-white/85 hover:text-yellow-400" aria-label="Instagram RIJ">
-                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-                    </a>
-                    <a href="https://www.facebook.com/profile.php?id=61590596994808" target="_blank" rel="noopener" class="text-white/85 hover:text-yellow-400" aria-label="Facebook RIJ">
-                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                    </a>
-                    <a href="https://www.tiktok.com/@redinterjuvcolombia" target="_blank" rel="noopener" class="text-white/85 hover:text-yellow-400" aria-label="TikTok RIJ">
-                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
-                    </a>
-                    <a href="https://www.youtube.com/@RedInterculturalJuvenilCol" target="_blank" rel="noopener" class="text-white/85 hover:text-yellow-400" aria-label="YouTube RIJ">
-                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-                    </a>
-                </div>
             `;
             
             menuToggle.parentElement.appendChild(mobileMenu);
