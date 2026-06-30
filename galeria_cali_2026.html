@@ -720,8 +720,8 @@ const GALLERY_DAYS = [
     day: '25 Junio',
     sections: [
       { title: 'BOICOP mañana', photos: seq(22, i => `${BASE}/25_06_2026/01_AM/${pad(i)}_rij_boicop_jornada_1_am_25_06_2026.jpg`).filter(src => !src.includes('/09_rij_boicop')) },
-      { title: 'BOICOP tarde', photos: seq(20, i => `${BASE}/25_06_2026/02_PM/${pad(i)}_rij_boicop_jornada_1_pm_25_06_2026.jpg`) },
-      { title: 'Monumento · recorrido', photos: seq(41, i => `${BASE}/25_06_2026/03_PR/${pad(i)}_rij_monumento_pr_jornada_1_pm_25_06_2026.jpg`) }
+      { title: 'BOICOP tarde', photos: seq(20, i => `${BASE}/25_06_2026/02_PM/${pad(i)}_rij_boicop_jornada_1_pm_25_06_2026.jpg`).filter(src => !src.includes('/16_rij_boicop')) },
+      { title: 'Monumento · recorrido', photos: seq(41, i => `${BASE}/25_06_2026/03_PR/${pad(i)}_rij_monumento_pr_jornada_1_pm_25_06_2026.jpg`).filter(src => !['/01_rij_monumento', '/27_rij_monumento', '/32_rij_monumento', '/34_rij_monumento'].some(pat => src.includes(pat))) }
     ]
   },
   {
@@ -733,7 +733,7 @@ const GALLERY_DAYS = [
   {
     day: '27 Junio',
     sections: [
-      { title: 'IUIPC mañana', photos: seq(21, i => `${BASE}/27_06_2026/${pad(i)}_rij_iuipc_jornada_3_am_27_06_2026.jpg`) }
+      { title: 'IUIPC mañana', photos: seq(21, i => `${BASE}/27_06_2026/${pad(i)}_rij_iuipc_jornada_3_am_27_06_2026.jpg`).filter(src => !src.includes('/06_rij_iuipc')) }
     ]
   }
 ];
